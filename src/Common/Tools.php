@@ -13,6 +13,8 @@ class Tools
 
     const EVT_PERIODICOS = 3;
 
+    const EVT_TESTES = 4;
+
     /**
      * @var string
      */
@@ -118,6 +120,7 @@ class Tools
             'S-2306',
             'S-2399',
             'S-2400',
+            'S-2410',
             'S-3000',
             'S-4000',
             'S-5001',

@@ -59,86 +59,86 @@ trait TraitS2410
         $this->dom->addChild(
             $beneficiario,
             "cpfBenef",
-            $this->std->cpfbenef,
+            $this->std->beneficiario->cpfbenef,
             true
         );
         $this->dom->addChild(
             $beneficiario,
             "matricula",
-            !empty($this->std->matricula) ? $this->std->matricula : null,
+            !empty($this->std->beneficiario->matricula) ? $this->std->beneficiario->matricula : null,
             false
         );
         $this->dom->addChild(
             $beneficiario,
             "cnpjOrigem",
-            !empty($this->std->cnpjorigem) ? $this->std->cnpjorigem : null,
+            !empty($this->std->beneficiario->cnpjorigem) ? $this->std->beneficiario->cnpjorigem : null,
             false
         );
         $this->node->appendChild($beneficiario);
         
-        $infoBenInicio = $this->dom->createElement("infoBenInicio");
+        $infobeninicio = $this->dom->createElement("infoBenInicio");
         $this->dom->addChild(
-            $infoBenInicio,
+            $infobeninicio,
             "cadIni",
-            $this->std->cadini,
+            $this->std->infobeninicio->cadini,
             true
         );
         $this->dom->addChild(
-            $infoBenInicio,
+            $infobeninicio,
             "indSitBenef",
-            !empty($this->std->indsitbenef) ? $this->std->indsitbenef : null,
+            !empty($this->std->infobeninicio->indsitbenef) ? $this->std->infobeninicio->indsitbenef : null,
             false
         );
         $this->dom->addChild(
-            $infoBenInicio,
+            $infobeninicio,
             "nrBeneficio",
-            $this->std->nrbeneficio,
+            $this->std->infobeninicio->nrbeneficio,
             true
         );
         $this->dom->addChild(
-            $infoBenInicio,
+            $infobeninicio,
             "dtIniBeneficio",
-            $this->std->dtinibeneficio,
+            $this->std->infobeninicio->dtinibeneficio,
             true
         );
         $this->dom->addChild(
-            $infoBenInicio,
+            $infobeninicio,
             "dtPublic",
-            !empty($this->std->dtpublic) ? $this->std->dtpublic : null,
+            !empty($this->std->infobeninicio->dtpublic) ? $this->std->infobeninicio->dtpublic : null,
             false
         );
-        $dadosBeneficio = $this->dom->createElement("dadosBeneficio");
+        $dadosbeneficio = $this->dom->createElement("dadosBeneficio");
         $this->dom->addChild(
-            $dadosBeneficio,
+            $dadosbeneficio,
             "tpBeneficio",
-            $this->std->tpbeneficio,
+            $this->std->infobeninicio->dadosbeneficio->tpbeneficio,
             true
         );
         $this->dom->addChild(
-            $dadosBeneficio,
+            $dadosbeneficio,
             "tpPlanRP",
-            $this->std->tpplanrp,
+            $this->std->infobeninicio->dadosbeneficio->tpplanrp,
             true
         );
         $this->dom->addChild(
-            $dadosBeneficio,
+            $dadosbeneficio,
             "dsc",
-            !empty($this->std->dsc) ? $this->std->dsc : null,
+            !empty($this->std->infobeninicio->dadosbeneficio->dsc) ? $this->std->infobeninicio->dadosbeneficio->dsc : null,
             false
         );
         $this->dom->addChild(
-            $dadosBeneficio,
+            $dadosbeneficio,
             "indDecJud",
-            !empty($this->std->inddecjud) ? $this->std->inddecjud : null,
+            !empty($this->std->infobeninicio->dadosbeneficio->inddecjud) ? $this->std->infobeninicio->dadosbeneficio->inddecjud : null,
             false
         );
         
-        if (!empty($this->std->infopenmorte)) {
+        if (!empty($this->std->infobeninicio->dadosbeneficio->infopenmorte)) {
             $infoPenMorte = $this->dom->createElement("infoPenMorte");
             $this->dom->addChild(
                 $infoPenMorte,
                 "tpPenMorte",
-                $this->std->infopenmorte->tppenmorte,
+                $this->std->infobeninicio->dadosbeneficio->infopenmorte->tppenmorte,
                 true
             );
             if (!empty($this->std->infopenmorte->instpenmorte)) {
@@ -146,99 +146,99 @@ trait TraitS2410
                 $this->dom->addChild(
                     $instPenMorte,
                     "cpfInst",
-                    $this->std->infopenmorte->instpenmorte->cpfinst,
+                    $this->std->infobeninicio->dadosbeneficio->infopenmorte->instpenmorte->cpfinst,
                     true
                 );
                 $this->dom->addChild(
                     $instPenMorte,
                     "dtInst",
-                    $this->std->infopenmorte->instpenmorte->dtinst,
+                    $this->std->infobeninicio->dadosbeneficio->infopenmorte->instpenmorte->dtinst,
                     true
                 );
                 $infoPenMorte->appendChild($instPenMorte);
             }
-            $dadosBeneficio->appendChild($infoPenMorte);
+            $dadosbeneficio->appendChild($infoPenMorte);
         }
-        $infoBenInicio->appendChild($dadosBeneficio);
+        $infobeninicio->appendChild($dadosbeneficio);
         
         if (!empty($this->std->sucessaobenef)) {
             $sucessaoBenef = $this->dom->createElement("sucessaoBenef");
             $this->dom->addChild(
                 $sucessaoBenef,
                 "cnpjOrgaoAnt",
-                $this->std->sucessaobenef->cnpjorgaoant,
+                $this->std->infobeninicio->sucessaobenef->cnpjorgaoant,
                 true
             );
             $this->dom->addChild(
                 $sucessaoBenef,
                 "nrBeneficioAnt",
-                $this->std->sucessaobenef->nrbeneficioant,
+                $this->std->infobeninicio->sucessaobenef->nrbeneficioant,
                 true
             );
             $this->dom->addChild(
                 $sucessaoBenef,
                 "dtTransf",
-                $this->std->sucessaobenef->dttransf,
+                $this->std->infobeninicio->sucessaobenef->dttransf,
                 true
             );
             $this->dom->addChild(
                 $sucessaoBenef,
                 "observacao",
-                !empty($this->std->sucessaobenef->observacao)
-                 ? $this->std->sucessaobenef->observacao : null,
+                !empty($this->std->infobeninicio->sucessaobenef->observacao)
+                 ? $this->std->infobeninicio->sucessaobenef->observacao : null,
                 false
             );
-            $infoBenInicio->appendChild($sucessaoBenef);
+            $infobeninicio->appendChild($sucessaoBenef);
         }
         
-        if (!empty($this->std->mudancacpf)) {
+        if (!empty($this->std->infobeninicio->mudancacpf)) {
             $mudancaCPF = $this->dom->createElement("mudancaCPF");
             $this->dom->addChild(
                 $mudancaCPF,
                 "cpfAnt",
-                $this->std->mudancacpf->cpfant,
+                $this->std->infobeninicio->mudancacpf->cpfant,
                 true
             );
             $this->dom->addChild(
                 $mudancaCPF,
                 "nrBeneficioAnt",
-                $this->std->mudancacpf->nrbeneficioant,
+                $this->std->infobeninicio->mudancacpf->nrbeneficioant,
                 true
             );
             $this->dom->addChild(
                 $mudancaCPF,
                 "dtAltCPF",
-                $this->std->mudancacpf->dtaltcpf,
+                $this->std->infobeninicio->mudancacpf->dtaltcpf,
                 true
             );
             $this->dom->addChild(
                 $mudancaCPF,
                 "observacao",
-                !empty($this->std->mudancacpf->observacao)
-                 ? $this->std->mudancacpf->observacao : null,
+                !empty($this->std->infobeninicio->mudancacpf->observacao)
+                 ? $this->std->infobeninicio->mudancacpf->observacao : null,
                 false
             );
-            $infoBenInicio->appendChild($mudancaCPF);
+            $infobeninicio->appendChild($mudancaCPF);
         }
         
-        if (!empty($this->std->infobentermino)) {
+        if (!empty($this->std->infobeninicio->infobentermino)) {
             $infoBenTermino = $this->dom->createElement("infoBenTermino");
             $this->dom->addChild(
                 $infoBenTermino,
                 "dtTermBeneficio",
-                $this->std->infobentermino->dttermbeneficio,
+                $this->std->infobeninicio->infobentermino->dttermbeneficio,
                 true
             );
             $this->dom->addChild(
                 $infoBenTermino,
                 "mtvTermino",
-                $this->std->infobentermino->mtvtermino,
+                $this->std->infobeninicio->infobentermino->mtvtermino,
                 true
             );
-            $infoBenInicio->appendChild($infoBenTermino);
+            $infobeninicio->appendChild($infoBenTermino);
         }
         
-        $this->node->appendChild($infoBenInicio);
+        $this->node->appendChild($infobeninicio);
         
         //finalização do xml
         $this->eSocial->appendChild($this->node);
