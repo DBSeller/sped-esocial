@@ -411,20 +411,20 @@ trait TraitS2306
         $ideTrabSemVinculo = $this->dom->createElement("ideTrabSemVinculo");
         $this->dom->addChild(
             $ideTrabSemVinculo,
-            "cpfTrab",
-            $this->std->trabsemvinculo->cpftrab,
+            "git status",
+            $this->std->idetrabsemvinculo->cpftrab,
             true
         );
         $this->dom->addChild(
             $ideTrabSemVinculo,
             "matricula",
-            !empty($this->std->trabsemvinculo->matricula) ? $this->std->trabsemvinculo->matricula : null,
+            !empty($this->std->idetrabsemvinculo->matricula) ? $this->std->idetrabsemvinculo->matricula : null,
             false
         );
         $this->dom->addChild(
             $ideTrabSemVinculo,
             "codCateg",
-            $this->std->trabsemvinculo->codcateg,
+            $this->std->idetrabsemvinculo->codcateg,
             true
         );
         $this->node->appendChild($ideTrabSemVinculo);
@@ -432,18 +432,18 @@ trait TraitS2306
         $this->dom->addChild(
             $infoTSVAlteracao,
             "dtAlteracao",
-            $this->std->tsvalteracao->dtalteracao,
+            $this->std->infotsvalteracao->dtalteracao,
             true
         );
         $this->dom->addChild(
             $infoTSVAlteracao,
             "natAtividade",
-            !empty($this->std->tsvalteracao->natatividade) ? $this->std->tsvalteracao->natatividade : null,
+            !empty($this->std->infotsvalteracao->natatividade) ? $this->std->infotsvalteracao->natatividade : null,
             false
         );
         $infoComplementares = null;
-        if (!empty($this->std->cargofuncao)) {
-            $carg = $this->std->cargofuncao;
+        if (!empty($this->std->infotsvalteracao->infoComplementares->cargofuncao)) {
+            $carg = $this->std->infotsvalteracao->infoComplementares->cargofuncao;
             $infoComplementares = $this->dom->createElement("infoComplementares");
             $cargoFuncao  = $this->dom->createElement("cargoFuncao");
             $this->dom->addChild(
@@ -472,25 +472,25 @@ trait TraitS2306
             );
             $infoComplementares->appendChild($cargoFuncao);
         }
-        if (!empty($this->std->remuneracao)) {
-            $remun = $this->std->remuneracao;
+        if (!empty($this->std->infocomplementares->remuneracao)) {
+            $remun = $this->std->infocomplementares->remuneracao;
             $remuneracao = $this->dom->createElement("remuneracao");
             $this->dom->addChild(
                 $remuneracao,
                 "vrSalFx",
-                $this->std->remuneracao->vrsalfx,
+                $remun->vrsalfx,
                 true
             );
             $this->dom->addChild(
                 $remuneracao,
                 "undSalFixo",
-                $this->std->remuneracao->undsalfixo,
+                $remun->undsalfixo,
                 true
             );
             $this->dom->addChild(
                 $remuneracao,
                 "dscSalVar",
-                !empty($this->std->remuneracao->dscsalvar) ? $this->std->remuneracao->dscsalvar : null,
+                !empty($remun->dscsalvar) ? $remun->dscsalvar : null,
                 false
             );
             if (empty($infoComplementares)) {
@@ -498,8 +498,8 @@ trait TraitS2306
             }
             $infoComplementares->appendChild($remuneracao);
         }
-        if (!empty($this->std->dirigentesindical)) {
-            $sind = $this->std->dirigentesindical;
+        if (!empty($this->std->infocomplementares->dirigentesindical)) {
+            $sind = $this->std->infocomplementares->dirigentesindical;
             $infoDirigenteSindical = $this->dom->createElement("infoDirigenteSindical");
             $this->dom->addChild(
                 $infoDirigenteSindical,
@@ -512,8 +512,8 @@ trait TraitS2306
             }
             $infoComplementares->appendChild($infoDirigenteSindical);
         }
-        if (!empty($this->std->trabcedido)) {
-            $trab = $this->std->trabcedido;
+        if (!empty($this->std->infocomplementares->trabcedido)) {
+            $trab = $this->std->infocomplementares->trabcedido;
             $infoTrabCedido = $this->dom->createElement("infoTrabCedido");
             $this->dom->addChild(
                 $infoTrabCedido,
@@ -526,8 +526,8 @@ trait TraitS2306
             }
             $infoComplementares->appendChild($infoTrabCedido);
         }
-        if (!empty($this->std->mandelet)) {
-            $mand = $this->std->mandelet;
+        if (!empty($this->std->infocomplementares->mandelet)) {
+            $mand = $this->std->infocomplementares->mandelet;
             $infoMandElet = $this->dom->createElement("infoMandElet");
             $this->dom->addChild(
                 $infoMandElet,
@@ -546,8 +546,8 @@ trait TraitS2306
             }
             $infoComplementares->appendChild($infoMandElet);
         }
-        if (!empty($this->std->estagiario)) {
-            $estag = $this->std->estagiario;
+        if (!empty($this->std->infocomplementares->infoestagiario)) {
+            $estag = $this->std->infocomplementares->infoestagiario;
             $infoEstagiario = $this->dom->createElement("infoEstagiario");
             $this->dom->addChild(
                 $infoEstagiario,
