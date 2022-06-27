@@ -411,7 +411,7 @@ trait TraitS2306
         $ideTrabSemVinculo = $this->dom->createElement("ideTrabSemVinculo");
         $this->dom->addChild(
             $ideTrabSemVinculo,
-            "git status",
+            "cpfTrab",
             $this->std->idetrabsemvinculo->cpftrab,
             true
         );
