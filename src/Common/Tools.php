@@ -98,7 +98,6 @@ class Tools
             'S-1060',
             'S-1070',
             'S-1080',
-            'S-2100',
         ],
         2 => [ //EVENTOS NÃO PERIÓDICOS grupo [2]
             'S-2190',
@@ -107,22 +106,31 @@ class Tools
             'S-2206',
             'S-2210',
             'S-2220',
+            'S-2221',
             'S-2230',
+            'S-2231',
             'S-2240',
-            'S-2241',
+            'S-2245',
             'S-2250',
+            'S-2260',
             'S-2298',
             'S-2299',
             'S-2300',
             'S-2306',
             'S-2399',
             'S-2400',
+            'S-2405',
+            'S-2410',
+            'S-2416',
+            'S-2420',
             'S-3000',
             'S-4000',
             'S-5001',
             'S-5002',
+            'S-5003',
             'S-5011',
             'S-5012',
+            'S-5013',
         ],
         3 => [ //EVENTOS PERIÓDICOS grupo [3]
             'S-1200',
@@ -133,6 +141,7 @@ class Tools
             'S-1260',
             'S-1270',
             'S-1280',
+            'S-1295',
             'S-1298',
             'S-1299',
             'S-1300',
@@ -172,7 +181,7 @@ class Tools
     /**
      * Stringfy layout number
      * @param string $version
-     * @param int $lenght
+     * @param int $length
      * @return string
      */
     protected function stringfyVersions($version, $length = 2)

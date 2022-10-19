@@ -14,10 +14,19 @@ namespace NFePHP\eSocial;
  * @author    Roberto L. Machado <linux.rlm at gmail dot com>
  * @link      http://github.com/nfephp-org/sped-esocial for the canonical source repository
  */
+
+use App\Exceptions\Handler;
+use App\Http\ValidatesJsonRequests;
+use App\Model\Evento;
+use App\Model\EventoFila;
+use App\Model\EventoOcorrencia;
+use App\Traits\SaveOcorrenciasTrait;
 use InvalidArgumentException;
 use NFePHP\Common\Certificate;
+use NFePHP\Common\Exception\ValidatorException;
 use NFePHP\Common\Validator;
 use NFePHP\eSocial\Common\FactoryInterface;
+use NFePHP\Common\Signer;
 use NFePHP\eSocial\Common\Soap\SoapCurl;
 use NFePHP\eSocial\Common\Soap\SoapInterface;
 use NFePHP\eSocial\Common\Tools as ToolsBase;
@@ -25,6 +34,8 @@ use RuntimeException;
 
 class Tools extends ToolsBase
 {
+    use SaveOcorrenciasTrait;
+
     /**
      * @var string
      */
@@ -41,12 +52,12 @@ class Tools extends ToolsBase
      * @var array
      */
     protected $soapnamespaces = [
-        'xmlns:xsi'  => "http://www.w3.org/2001/XMLSchema-instance",
-        'xmlns:xsd'  => "http://www.w3.org/2001/XMLSchema",
+        'xmlns:xsi' => "http://www.w3.org/2001/XMLSchema-instance",
+        'xmlns:xsd' => "http://www.w3.org/2001/XMLSchema",
         'xmlns:soap' => "http://www.w3.org/2003/05/soap-envelope",
     ];
     /**
-     * @var \SOAPHeader
+     * @var \SoapHeader
      */
     protected $objHeader;
     /**
@@ -70,10 +81,19 @@ class Tools extends ToolsBase
      */
     protected $parameters;
     /**
-     * @var string
+     * @var array
      */
     protected $envelopeXmlns;
-    
+    /**
+     * @var array
+     */
+    protected $urlbase;
+    /**
+     * @var string
+     */
+    protected $namespace = 'http://www.esocial.gov.br/servicos';
+
+
     /**
      * Constructor
      * @param string $config
@@ -82,6 +102,29 @@ class Tools extends ToolsBase
     public function __construct($config, Certificate $certificate)
     {
         parent::__construct($config, $certificate);
+        //define o ambiente a ser usado
+        $this->urlbase = [
+            'consulta' =>  'https://webservices.producaorestrita.esocial.gov.br/'
+            . 'servicos/empregador/consultarloteeventos/WsConsultarLoteEventos.svc',
+            'envio' => 'https://webservices.producaorestrita.esocial.gov.br/'
+            . 'servicos/empregador/enviarloteeventos/WsEnviarLoteEventos.svc',
+            'identificadores' => 'https://webservices.producaorestrita.esocial.gov.br/'
+            . 'servicos/empregador/dwlcirurgico/WsConsultarIdentificadoresEventos.svc',
+            'downloads' => 'https://webservices.producaorestrita.esocial.gov.br/'
+            . 'servicos/empregador/dwlcirurgico/WsSolicitarDownloadEventos.svc'
+        ];
+        if ($this->tpAmb == 1) {
+            $this->urlbase = [
+                'consulta' =>  'https://webservices.consulta.esocial.gov.br/'
+                . 'servicos/empregador/consultarloteeventos/WsConsultarLoteEventos.svc',
+                'envio' => 'https://webservices.envio.esocial.gov.br/'
+                . 'servicos/empregador/enviarloteeventos/WsEnviarLoteEventos.svc',
+                'identificadores' => 'https://webservices.download.esocial.gov.br/'
+                . 'servicos/empregador/dwlcirurgico/WsConsultarIdentificadoresEventos.svc',
+                'downloads' => 'https://webservices.download.esocial.gov.br/'
+                . 'servicos/empregador/dwlcirurgico/WsSolicitarDownloadEventos.svc'
+            ];
+        }
     }
 
     /**
@@ -95,37 +138,45 @@ class Tools extends ToolsBase
 
     /**
      * Event batch query
-     * @param  string $protocolo
+     * @param string $protocolo
      * @return string
      */
     public function consultarLoteEventos($protocolo)
     {
         $operationVersion = $this->serviceXsd['ConsultaLoteEventos']['version'];
-        $this->action = "http://www.esocial.gov.br/servicos/empregador/lote"
-            ."/eventos/envio/consulta/retornoProcessamento/$operationVersion"
+        if (empty($operationVersion)) {
+            throw new \InvalidArgumentException(
+                'Schemas não localizados, verifique de passou as versões '
+                . 'corretamente no config.'
+            );
+        }
+        $verWsdl = $this->serviceXsd['WsConsultarLoteEventos']['version'];
+        $this->action = "{$this->namespace}/empregador/lote"
+            ."/eventos/envio/consulta/retornoProcessamento/$verWsdl"
             ."/ServicoConsultarLoteEventos/ConsultarLoteEventos";
+        
         $this->method = "ConsultarLoteEventos";
-        $this->uri = "https://webservices.producaorestrita.esocial.gov.br"
-            ."/servicos/empregador/consultarloteeventos"
-            ."/WsConsultarLoteEventos.svc";
+        $this->uri = $this->urlbase['consulta'];
         $this->envelopeXmlns = [
             'xmlns:soapenv' => "http://schemas.xmlsoap.org/soap/envelope/",
-            'xmlns:v1'      => "http://www.esocial.gov.br/servicos/empregador/lote"
-                ."/eventos/envio/consulta/retornoProcessamento/$operationVersion",
+            'xmlns:v1' => "http://www.esocial.gov.br/servicos/empregador/lote"
+                . "/eventos/envio/consulta/retornoProcessamento/$verWsdl",
         ];
         $request = "<eSocial xmlns=\"http://www.esocial.gov.br/schema/lote"
-            ."/eventos/envio/consulta/retornoProcessamento/v1_0_0\" "
+            ."/eventos/envio/consulta/retornoProcessamento/"
+            . $operationVersion . "\" "
             ."xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">"
             ."<consultaLoteEventos>"
             ."<protocoloEnvio>$protocolo</protocoloEnvio>"
             ."</consultaLoteEventos>"
             ."</eSocial>";
+        
         //validar a requisição conforme o seu respectivo XSD
         Validator::isValid(
             $request,
             $this->path
-            ."schemes/comunicacao/$this->serviceStr/"
-            ."ConsultaLoteEventos-$operationVersion.xsd"
+            . "schemes/comunicacao/$this->serviceStr/"
+            . "ConsultaLoteEventos-$operationVersion.xsd"
         );
         $body = "<v1:ConsultarLoteEventos>"
             ."<v1:consulta>"
@@ -136,10 +187,348 @@ class Tools extends ToolsBase
         $this->lastResponse = $this->sendRequest($body);
         return $this->lastResponse;
     }
+    
+    /**
+     * Events Identification employer query
+     * @param string $tpEvt
+     * @param string $perapur
+     * @return string
+     * @throws InvalidArgumentException
+     */
+    public function consultarEventosEmpregador($tpEvt, $perapur)
+    {
+        $operationVersion = $this->serviceXsd['ConsultaIdentificadoresEventosEmpregador']['version'];
+        if (empty($operationVersion)) {
+            throw new \InvalidArgumentException(
+                'Schemas não localizados, verifique de passou as versões '
+                    . 'corretamente no config.'
+            );
+        }
+        $this->method = 'ConsultarIdentificadoresEventosEmpregador';
+        $verWsdl = $this->serviceXsd['WsConsultarIdentificadoresEventos']['version'];
+        $this->action = "{$this->namespace}/empregador/consulta/identificadores-eventos/"
+        . "$verWsdl/ServicoConsultarIdentificadoresEventos/{$this->method}";
+        
+        $this->uri = $this->urlbase['identificadores'];
+        
+        $this->envelopeXmlns = [
+            'xmlns:soapenv' => "http://schemas.xmlsoap.org/soap/envelope/",
+            'xmlns:v1'      => "http://www.esocial.gov.br/servicos/empregador/"
+            . "consulta/identificadores-eventos/$verWsdl",
+        ];
+        
+        $request = "<eSocial xmlns=\"http://www.esocial.gov.br/schema/consulta/"
+            . "identificadores-eventos/empregador/"
+            . $operationVersion . "\" "
+            . "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">"
+            . "<consultaIdentificadoresEvts>"
+            . "<ideEmpregador>"
+            . "<tpInsc>{$this->tpInsc}</tpInsc>"
+            . "<nrInsc>{$this->nrInsc}</nrInsc>"
+            . "</ideEmpregador>"
+            . "<consultaEvtsEmpregador>"
+            . "<tpEvt>$tpEvt</tpEvt>"
+            . "<perApur>$perapur</perApur>"
+            . "</consultaEvtsEmpregador>"
+            . "</consultaIdentificadoresEvts>"
+            . "</eSocial>";
+        
+        $request = $this->sign($request);
+        
+        //validar a requisição conforme o seu respectivo XSD
+        Validator::isValid(
+            $request,
+            $this->path
+            ."schemes/comunicacao/$this->serviceStr/"
+            ."ConsultaIdentificadoresEventosEmpregador-$operationVersion.xsd"
+        );
+        
+        $body = "<v1:{$this->method}>"
+            . "<v1:consultaEventosEmpregador>"
+            . $request
+            . "</v1:consultaEventosEmpregador>"
+            . "</v1:{$this->method}>";
+        $this->lastRequest  = $body;
+        $this->lastResponse = $this->sendRequest($body);
+        return $this->lastResponse;
+    }
+    
+    /**
+     * Events Identification tables query
+     * @param string $tpEvt
+     * @param string $chEvt
+     * @param string $dtIni
+     * @param string $dtFim
+     * @return string
+     * @throws InvalidArgumentException
+     */
+    public function consultarEventosTabela($tpEvt, $chEvt = null, $dtIni = null, $dtFim = null)
+    {
+        $operationVersion = $this->serviceXsd['ConsultaIdentificadoresEventosTabela']['version'];
+        if (empty($operationVersion)) {
+            throw new \InvalidArgumentException(
+                'Schemas não localizados, verifique de passou as versões '
+                    . 'corretamente no config.'
+            );
+        }
+        $this->method = 'ConsultarIdentificadoresEventosTabela';
+        $verWsdl = $this->serviceXsd['WsConsultarIdentificadoresEventos']['version'];
+        $this->action = "{$this->namespace}/empregador/consulta/identificadores-eventos/"
+        . "$verWsdl/ServicoConsultarIdentificadoresEventos/{$this->method}";
+
+        $this->uri = $this->urlbase['identificadores'];
+        
+        $this->envelopeXmlns = [
+            'xmlns:soapenv' => "http://schemas.xmlsoap.org/soap/envelope/",
+            'xmlns:v1'      => "http://www.esocial.gov.br/servicos/empregador/"
+            . "consulta/identificadores-eventos/$verWsdl",
+        ];
+        
+        $request = "<eSocial xmlns=\"http://www.esocial.gov.br/schema/consulta/"
+            . "identificadores-eventos/tabela/"
+            . $operationVersion . "\" "
+            . "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">"
+            . "<consultaIdentificadoresEvts>"
+            . "<ideEmpregador>"
+            . "<tpInsc>{$this->tpInsc}</tpInsc>"
+            . "<nrInsc>{$this->nrInsc}</nrInsc>"
+            . "</ideEmpregador>"
+            . "<consultaEvtsTabela>"
+            . "<tpEvt>$tpEvt</tpEvt>";
+        
+        $request .= !empty($chEvt) ? "<chEvt>$chEvt</chEvt>" : "";
+        $request .= !empty($dtIni) ? "<dtIni>$dtIni</dtIni>" : "";
+        $request .= !empty($dtFim) ? "<dtFim>$dtFim</dtFim>" : "";
+        
+        $request .= "</consultaEvtsTabela>"
+            . "</consultaIdentificadoresEvts>"
+            . "</eSocial>";
+        
+        $request = $this->sign($request);
+        
+        //validar a requisição conforme o seu respectivo XSD
+        Validator::isValid(
+            $request,
+            $this->path
+            ."schemes/comunicacao/$this->serviceStr/"
+            ."ConsultaIdentificadoresEventosTabela-$operationVersion.xsd"
+        );
+        $body = "<v1:{$this->method}>"
+            ."<v1:consultaEventosTabela>"
+            .$request
+            ."</v1:consultaEventosTabela>"
+            ."</v1:{$this->method}>";
+            
+        $this->lastRequest  = $body;
+        $this->lastResponse = $this->sendRequest($body);
+        return $this->lastResponse;
+    }
+    
+    /**
+     * Events Identification employee query
+     * @param string $cpfTrab
+     * @param string $dtIni
+     * @param string $dtFim
+     * @return string
+     * @throws InvalidArgumentException
+     */
+    public function consultarEventosTrabalhador($cpfTrab, $dtIni, $dtFim)
+    {
+        $operationVersion = $this->serviceXsd['ConsultaIdentificadoresEventosTrabalhador']['version'];
+        if (empty($operationVersion)) {
+            throw new \InvalidArgumentException(
+                'Schemas não localizados, verifique de passou as versões '
+                    . 'corretamente no config.'
+            );
+        }
+        $this->method = 'ConsultarIdentificadoresEventosTrabalhador';
+        $verWsdl = $this->serviceXsd['WsConsultarIdentificadoresEventos']['version'];
+        $this->action = "{$this->namespace}/empregador/consulta/identificadores-eventos/"
+        . "$verWsdl/ServicoConsultarIdentificadoresEventos/{$this->method}";
+
+        $this->uri = $this->urlbase['identificadores'];
+        
+        $this->envelopeXmlns = [
+            'xmlns:soapenv' => "http://schemas.xmlsoap.org/soap/envelope/",
+            'xmlns:v1'      => "http://www.esocial.gov.br/servicos/empregador/"
+            . "consulta/identificadores-eventos/$verWsdl",
+        ];
+        
+        $request = "<eSocial xmlns=\"http://www.esocial.gov.br/schema/consulta/"
+            . "identificadores-eventos/trabalhador/"
+            . $operationVersion . "\" "
+            . "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">"
+            . "<consultaIdentificadoresEvts>"
+            . "<ideEmpregador>"
+            . "<tpInsc>{$this->tpInsc}</tpInsc>"
+            . "<nrInsc>{$this->nrInsc}</nrInsc>"
+            . "</ideEmpregador>"
+            . "<consultaEvtsTrabalhador>"
+            . "<cpfTrab>$cpfTrab</cpfTrab>"
+            . "<dtIni>$dtIni</dtIni>"
+            . "<dtFim>$dtFim</dtFim>"
+            . "</consultaEvtsTrabalhador>"
+            . "</consultaIdentificadoresEvts>"
+            . "</eSocial>";
+
+        $request = $this->sign($request);
+        
+        //validar a requisição conforme o seu respectivo XSD
+        Validator::isValid(
+            $request,
+            $this->path
+            ."schemes/comunicacao/$this->serviceStr/"
+            ."ConsultaIdentificadoresEventosTrabalhador-$operationVersion.xsd"
+        );
+        
+        $body = "<v1:{$this->method}>"
+            ."<v1:consultaEventosTrabalhador>"
+            .$request
+            ."</v1:consultaEventosTrabalhador>"
+            ."</v1:{$this->method}>";
+            
+        $this->lastRequest  = $body;
+        $this->lastResponse = $this->sendRequest($body);
+        return $this->lastResponse;
+    }
+    
+    /**
+     * Download Event by Id
+     * @param array $ids
+     * @return string
+     * @throws InvalidArgumentException
+     */
+    public function downloadEventosPorId($ids)
+    {
+        $operationVersion = $this->serviceXsd['SolicitacaoDownloadEventosPorId']['version'];
+        if (empty($operationVersion)) {
+            throw new \InvalidArgumentException(
+                'Schemas não localizados, verifique de passou as versões '
+                    . 'corretamente no config.'
+            );
+        }
+
+        $this->method = 'SolicitarDownloadEventosPorId';
+        $verWsdl = $this->serviceXsd['WsSolicitarDownloadEventos']['version'];
+        $this->action = "{$this->namespace}/empregador/download/"
+        . "solicitacao/$verWsdl/ServicoSolicitarDownloadEventos/{$this->method}";
+        
+        $this->uri = $this->urlbase['downloads'];
+        
+        $this->envelopeXmlns = [
+            'xmlns:soapenv' => "http://schemas.xmlsoap.org/soap/envelope/",
+            'xmlns:v1'      => "http://www.esocial.gov.br/servicos/empregador/"
+            . "download/solicitacao/$verWsdl",
+        ];
+        
+        $request = "<eSocial xmlns=\"http://www.esocial.gov.br/schema/download/"
+            . "solicitacao/id/$operationVersion\" "
+            . "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">"
+            . "<download>"
+            . "<ideEmpregador>"
+            . "<tpInsc>{$this->tpInsc}</tpInsc>"
+            . "<nrInsc>{$this->nrInsc}</nrInsc>"
+            . "</ideEmpregador>"
+            . "<solicDownloadEvtsPorId>";
+        foreach ($ids as $id) {
+            $request .= "<id>$id</id>";
+        }
+        $request .= "</solicDownloadEvtsPorId>"
+            . "</download>"
+            . "</eSocial>";
+        
+        $request = $this->sign($request);
+        
+        //validar a requisição conforme o seu respectivo XSD
+        Validator::isValid(
+            $request,
+            $this->path
+            ."schemes/comunicacao/$this->serviceStr/"
+            ."SolicitacaoDownloadEventosPorId-$operationVersion.xsd"
+        );
+        
+        $body = "<v1:{$this->method}>"
+            ."<v1:solicitacao>"
+            .$request
+            ."</v1:solicitacao>"
+            ."</v1:{$this->method}>";
+            
+        $this->lastRequest  = $body;
+        $this->lastResponse = $this->sendRequest($body);
+        return $this->lastResponse;
+    }
+    
+    /**
+     * Download Event by receipt number
+     * @param array $nrRecs
+     * @return string
+     * @throws InvalidArgumentException
+     */
+    public function downloadEventosPorNrRecibo($nrRecs)
+    {
+        $operationVersion = $this->serviceXsd['SolicitacaoDownloadEventosPorNrRecibo']['version'];
+        if (empty($operationVersion)) {
+            throw new \InvalidArgumentException(
+                'Schemas não localizados, verifique de passou as versões '
+                    . 'corretamente no config.'
+            );
+        }
+
+        $this->method = 'SolicitarDownloadEventosPorNrRecibo';
+        $verWsdl = $this->serviceXsd['WsSolicitarDownloadEventos']['version'];
+        $this->action = "{$this->namespace}/empregador/download/"
+        . "solicitacao/$verWsdl/ServicoSolicitarDownloadEventos/{$this->method}";
+        
+        $this->uri = $this->urlbase['downloads'];
+        
+        $this->envelopeXmlns = [
+            'xmlns:soapenv' => "http://schemas.xmlsoap.org/soap/envelope/",
+            'xmlns:v1'      => "http://www.esocial.gov.br/servicos/empregador/"
+            . "download/solicitacao/$verWsdl",
+        ];
+        
+        $request = "<eSocial xmlns=\"http://www.esocial.gov.br/schema/download/"
+            . "solicitacao/nrRecibo/$operationVersion\" "
+            . "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">"
+            . "<download>"
+            . "<ideEmpregador>"
+            . "<tpInsc>{$this->tpInsc}</tpInsc>"
+            . "<nrInsc>{$this->nrInsc}</nrInsc>"
+            . "</ideEmpregador>"
+            . "<solicDownloadEventosPorNrRecibo>";
+        
+        foreach ($nrRecs as $nrRec) {
+            $request .= "<nrRec>$nrRec</nrRec>";
+        }
+        
+        $request .= "</solicDownloadEventosPorNrRecibo>"
+            . "</download>"
+            . "</eSocial>";
+        
+        $request = $this->sign($request);
+        
+        //validar a requisição conforme o seu respectivo XSD
+        Validator::isValid(
+            $request,
+            $this->path
+            ."schemes/comunicacao/$this->serviceStr/"
+            ."SolicitacaoDownloadEventosPorNrRecibo-$operationVersion.xsd"
+        );
+        
+        $body = "<v1:{$this->method}>"
+            ."<v1:solicitacao>"
+            .$request
+            ."</v1:solicitacao>"
+            ."</v1:{$this->method}>";
+            
+        $this->lastRequest  = $body;
+        $this->lastResponse = $this->sendRequest($body);
+        return $this->lastResponse;
+    }
 
     /**
      * Send request to webservice
-     * @param  string $request
+     * @param string $request
      * @return string
      */
     protected function sendRequest($request)
@@ -152,18 +541,21 @@ class Tools extends ToolsBase
             $envelope .= "$key = \"$xmlns\" ";
         }
         $envelope .= ">"
-            ."<soapenv:Header/>"
-            ."<soapenv:Body>"
-            .$request
-            ."</soapenv:Body>"
-            ."</soapenv:Envelope>";
-        $msgSize    = strlen($envelope);
+            . "<soapenv:Header/>"
+            . "<soapenv:Body>"
+            . $request
+            . "</soapenv:Body>"
+            . "</soapenv:Envelope>";
+        $msgSize = strlen($envelope);
         $parameters = [
             "Content-Type: text/xml;charset=UTF-8",
             "SOAPAction: \"$this->action\"",
             "Content-length: $msgSize",
         ];
-        //return $envelope;
+
+        // Versão do SOAP esperada é a 1.1, conforme manual do desenvolvedor eSocial versão 1.1:
+        // "Alteração da versão do SOAP de 1.2 para 1.1."
+        // http://portal.esocial.gov.br/institucional/manuais/manualorientacaodesenvolvedoresocialv1-7.pdf
         return (string) $this->soap->send(
             $this->method,
             $this->uri,
@@ -175,8 +567,8 @@ class Tools extends ToolsBase
 
     /**
      * Send batch of events
-     * @param  integer $grupo
-     * @param  array $eventos
+     * @param integer $grupo
+     * @param array $eventos
      * @return string
      */
     public function enviarLoteEventos($grupo, $eventos = [])
@@ -184,38 +576,143 @@ class Tools extends ToolsBase
         if (empty($eventos)) {
             return '';
         }
-        $xml  = "";
+        $xml = "";
         $nEvt = count($eventos);
         if ($nEvt > 50) {
             throw new InvalidArgumentException(
                 "O numero máximo de eventos em um lote é 50, "
-                ."você está tentando enviar $nEvt eventos !"
+                . "você está tentando enviar $nEvt eventos !"
             );
         }
+
+        $path = 'storage' . DIRECTORY_SEPARATOR . 'envios' . DIRECTORY_SEPARATOR . date('Y') . DIRECTORY_SEPARATOR . date('m') . DIRECTORY_SEPARATOR;
+        if (!is_dir($path)) {
+            mkdir($path, 0755, true);
+        }
+        $nomeEvento = 'SXXXX';
+
         foreach ($eventos as $evt) {
             //verifica se o evento pertence ao grupo indicado
-            if (! in_array($evt->alias(), $this->grupos[$grupo])) {
+            $nomeEvento = $evt->alias();
+            if (!in_array($evt->alias(), $this->grupos[$grupo])) {
                 throw new RuntimeException(
                     'O evento ' . $evt->alias() . ' não pertence a este grupo [ '
                     . $this->eventGroup[$grupo] . ' ].'
                 );
             }
             $this->checkCertificate($evt);
-            $xml .= "<evento Id=\"$evt->evtid\">";
-            $xml .= $evt->toXML();
-            $xml .= "</evento>";
+            $xmlEvento = "<evento Id=\"$evt->evtid\">";
+
+            try {
+                $xmlEvento .= $evt->toXML();
+                $xmlEvento .= "</evento>";
+
+            } catch (ValidatorException $exception) {
+                $evtEsocialId = $evt->evtid;
+
+                //Retorna o Evento_id que é utilizado no find.
+                $eventoFila = EventoFila::where('evento_esocial_id', '=', $evtEsocialId)->first();
+                $eventoInvalido = Evento::find($eventoFila->evento_id);
+
+                //Atualiza o status do evento.
+                Evento::where('id', '=', $eventoInvalido->id)->update(['status' => '7']);
+
+                //Retira da evento_fila, fazendo com que a mesma não fique trancada por causa de 1 ocorrência.
+                $eventoFila->delete();
+
+                // Remove todas as ocorrências do evento
+                EventoOcorrencia::where('evento_id', '=', $eventoInvalido->id)->delete();
+
+                // Recupera o nome do campo para adicionar uma nova ocorrência
+                $inicioCampo = substr($exception->getMessage(), strpos($exception->getMessage(), '}', 0) + 1);
+                $campo = substr($inicioCampo, 0, strpos($inicioCampo, "'"));
+
+                $mensagemErro = "Erro ao processar as informações para envio no eSocial.<br>";
+                $mensagemErro .= "Consulte o manual para preenchimento correto das informações.";
+                $mensagemErro .= "<br><br>";
+                $mensagemErro .= "Mensagem técnica:<br>";
+                $mensagemErro .= $exception->getMessage();
+
+                $this->saveOcorrencias(
+                    [
+                        (object) [
+                            'codigo' => $exception->getCode(),
+                            'tipo' => 1,
+                            'descricao' => $mensagemErro,
+                            'localizacao' => sprintf("/eSocial/%s/IDENTIFICADOR_GRUPO/%s", $evt->getEventName(), $campo)
+                        ],
+                    ],
+                    $eventoInvalido
+                );
+
+                continue;
+
+            } catch (\Exception $exception) {
+                $evtEsocialId = $evt->evtid;
+
+                //Retorna o Evento_id que é utilizado no find.
+                $eventoFila = EventoFila::where('evento_esocial_id', '=', $evtEsocialId)->first();
+                $eventoInvalido = Evento::find($eventoFila->evento_id);
+
+                //Atualiza o status do evento.
+                Evento::where('id', '=', $eventoInvalido->id)->update(['status' => '7']);
+
+                //Retira da evento_fila, fazendo com que a mesma não fique trancada por causa de 1 ocorrência.
+                $eventoFila->delete();
+
+                // Remove todas as ocorrências do evento
+                EventoOcorrencia::where('evento_id', '=', $eventoInvalido->id)->delete();
+
+                // Recupera o nome do campo para adicionar uma nova ocorrência
+                $campo = substr($exception->getMessage(), strpos($exception->getMessage(), '$', 0) + 1);
+                
+                $mensagemErro = "Erro ao processar as informações para envio no eSocial.<br>";
+                $mensagemErro .= "Consulte o manual para preenchimento correto das informações.";
+                $mensagemErro .= "<br><br>";
+                $mensagemErro .= "Mensagem técnica:<br>";
+                $mensagemErro .= $exception->getMessage();
+
+                $this->saveOcorrencias(
+                    [
+                        (object) [
+                            'codigo' => $exception->getCode(),
+                            'tipo' => 1,
+                            'descricao' => $mensagemErro,
+                            'localizacao' => sprintf("/eSocial/%s/IDENTIFICADOR_GRUPO/%s", $evt->getEventName(), $campo)
+                        ],
+                    ],
+                    $eventoInvalido
+                );
+                continue;
+
+            }
+            $xml .= $xmlEvento;
+
         }
+
+        if (empty($xml)) {
+            return null;
+        }
+
         $operationVersion = $this->serviceXsd['EnvioLoteEventos']['version'];
+        if (empty($operationVersion)) {
+            throw new \InvalidArgumentException(
+                'Schemas não localizados, verifique de passou as versões '
+                . 'corretamente no config.'
+            );
+        }
+        $verWsdl = $this->serviceXsd['WsEnviarLoteEventos']['version'];
         $this->method = "EnviarLoteEventos";
         $this->action = "http://www.esocial.gov.br/servicos/empregador/lote"
-            . "/eventos/envio/v1_1_0/ServicoEnviarLoteEventos"
+            . "/eventos/envio/"
+            . $verWsdl
+            . "/ServicoEnviarLoteEventos"
             . "/EnviarLoteEventos";
-        $this->uri = "https://webservices.producaorestrita.esocial.gov.br"
-            ."/servicos/empregador/enviarloteeventos/WsEnviarLoteEventos.svc";
+        $this->uri = $this->urlbase['envio'];
         $this->envelopeXmlns = [
             'xmlns:soapenv' => "http://schemas.xmlsoap.org/soap/envelope/",
-            'xmlns:v1'      => "http://www.esocial.gov.br/servicos/empregador"
-                . "/lote/eventos/envio/$operationVersion",
+            'xmlns:v1' => "http://www.esocial.gov.br/servicos/empregador"
+                . "/lote/eventos/envio/$verWsdl",
         ];
         $request = "<eSocial xmlns=\"http://www.esocial.gov.br/schema/lote"
             . "/eventos/envio/$operationVersion\" "
@@ -235,18 +732,24 @@ class Tools extends ToolsBase
             . "</envioLoteEventos>"
             . "</eSocial>";
         //validar a requisição conforme o seu respectivo XSD
+        $date = new \DateTime();
+        $nomeArquivo = date("d-m-Y") . "-" . $nomeEvento . "-" . date("his") . "-". $date->getTimestamp() . "-" . md5(uniqid(rand(), true)) . ".xml";
+        file_put_contents($path . $nomeArquivo, print_r($request, true));
+        
         Validator::isValid(
             $request,
             $this->path
             . "schemes/comunicacao/$this->serviceStr/"
             . "EnvioLoteEventos-$operationVersion.xsd"
         );
+
         $body = "<v1:EnviarLoteEventos>"
             . "<v1:loteEventos>"
             . $request
             . "</v1:loteEventos>"
             . "</v1:EnviarLoteEventos>";
-        $this->lastRequest  = $body;
+
+        $this->lastRequest = $body;
         $this->lastResponse = $this->sendRequest($body);
         return $this->lastResponse;
     }
@@ -254,7 +757,7 @@ class Tools extends ToolsBase
     /**
      * Verify the availability of a digital certificate.
      * If available, place it where it is needed
-     * @param  FactoryInterface $evento
+     * @param FactoryInterface $evento
      * @throws RuntimeException
      */
     protected function checkCertificate(FactoryInterface $evento)
@@ -273,5 +776,21 @@ class Tools extends ToolsBase
                 $evento->setCertificate($this->certificate);
             }
         }
+    }
+    
+    protected function sign($request)
+    {
+        return str_replace(
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+            '',
+            $sign = Signer::sign(
+                $this->certificate,
+                $request,
+                'eSocial',
+                '',
+                OPENSSL_ALGO_SHA256,
+                [false, false, null, null]
+            )
+        );
     }
 }
