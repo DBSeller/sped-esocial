@@ -81,6 +81,7 @@ class Event
         'evtfgts' => Factories\EvtFGTS::class,
         'evtbasesfgts' => Factories\EvtBasesFGTS::class,
         'evtbaixa' => Factories\EvtBaixa::class,
+        'evtproctrab' => Factories\EvtProcTrab::class,
     ];
 
     /**
@@ -146,6 +147,7 @@ class Event
         's2416' => 'evtcdbenalt',
         's2418' => 'evtreativben',
         's2420' => 'evtcdbenterm',
+        's2500' => 'evtproctrab',
     ];
 
     /**
