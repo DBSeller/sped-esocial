@@ -64,7 +64,7 @@ trait TraitS2500
             $infoProcesso,
             "origem",
             $this->std->infoprocesso->origem,
-            false
+            true
         );
         $this->dom->addChild(
             $infoProcesso,
@@ -132,7 +132,11 @@ trait TraitS2500
             }
             $dadosCompl->appendChild($infoCCP);
         }
-        
+
+        $infoProcesso->appendChild($dadosCompl);
+        //Encerra infoProcesso
+        $this->node->appendChild($infoProcesso);
+        //Inicia idTrab
         $ideTrab = $this->dom->createElement("ideTrab");
         $trabalhador = $this->std->idetrab;
         $this->dom->addChild(
@@ -157,7 +161,6 @@ trait TraitS2500
                 false
             );
         }
-        $dadosCompl->appendChild($ideTrab);
         if (isset($this->std->idetrab->dependente) &&
             !empty($this->std->idetrab->dependente)) {
             foreach ($this->std->idetrab->dependente as $dep) {
@@ -182,7 +185,7 @@ trait TraitS2500
                         false
                     );
                 }
-                $dadosCompl->appendChild($dependente);
+                $ideTrab->appendChild($dependente);
             }
         }
 
@@ -254,7 +257,7 @@ trait TraitS2500
                 !empty($info->dtinicio) ? $info->dtinicio : null,
                 false
             );
-            $dadosCompl->appendChild($infoContr);
+            $ideTrab->appendChild($infoContr);
             
             if (isset($info->infocompl) && !empty($info->infocompl)) {
                 $infoCompl = $this->dom->createElement("infoCompl");
@@ -271,7 +274,7 @@ trait TraitS2500
                     $compl->natatividade,
                     false
                 );
-                $dadosCompl->appendChild($infoCompl);
+                $infoContr->appendChild($infoCompl);
             }
             if (isset($info->infocompl)) {
                 if (isset($info->infocompl->remuneracao) &&
@@ -301,11 +304,11 @@ trait TraitS2500
                                 $remuneracao,
                                 "dscSalVar",
                                 $remunera->dscsalvar,
-                                true
+                                false
                             );
                         }
                     }
-                    $dadosCompl->appendChild($remuneracao);
+                    $infoCompl->appendChild($remuneracao);
                 }
             }
             if (isset($info->infocompl)) {
@@ -335,10 +338,10 @@ trait TraitS2500
                             $informacaoVinculo,
                             "tmpParc",
                             $vinculo->tmpparc,
-                            true
+                            false
                         );
                     }
-                    $dadosCompl->appendChild($informacaoVinculo);
+                    $infoCompl->appendChild($informacaoVinculo);
                 }
                 if (isset($info->infocompl->infovinc)) {
                     if (isset($info->infocompl->infovinc)) {
@@ -355,7 +358,7 @@ trait TraitS2500
                                 $duracaoContrato,
                                 "dtTerm",
                                 $duracao->dtterm,
-                                true
+                                false
                             );
                         }
                         if (isset($duracao->clauassec) && !empty($duracao->clauassec)) {
@@ -363,7 +366,7 @@ trait TraitS2500
                                 $duracaoContrato,
                                 "clauAssec",
                                 $duracao->clauassec,
-                                true
+                                false
                             );
                         }
                         if (isset($duracao->objdet) && !empty($duracao->objdet)) {
@@ -371,10 +374,10 @@ trait TraitS2500
                                 $duracaoContrato,
                                 "objDet",
                                 $duracao->objdet,
-                                true
+                                false
                             );
                         }
-                        $dadosCompl->appendChild($duracaoContrato);
+                        $informacaoVinculo->appendChild($duracaoContrato);
                     }
                 }
             }
@@ -389,45 +392,10 @@ trait TraitS2500
                         true
                     );
                 }
-                $dadosCompl->appendChild($observacoes);
+                $informacaoVinculo->appendChild($observacoes);
             }
 
             if (isset($info->infocompl->infovinc)) {
-                if (isset($info->infocompl->infovinc->duracao)) {
-                    $duracao = $info->infocompl->infovinc->duracao;
-                    $duracaoContrato = $this->dom->createElement("duracao");
-                    $this->dom->addChild(
-                        $duracaoContrato,
-                        "tpContr",
-                        $duracao->tpcontr,
-                        true
-                    );
-                    if (isset($duracao->dtterm) && !empty($duracao->dtterm)) {
-                        $this->dom->addChild(
-                            $duracaoContrato,
-                            "dtTerm",
-                            $duracao->dtterm,
-                            false
-                        );
-                    }
-                    if (isset($duracao->clauassec) && !empty($duracao->clauassec)) {
-                        $this->dom->addChild(
-                            $duracaoContrato,
-                            "clauAssec",
-                            $duracao->clauassec,
-                            false
-                        );
-                    }
-                    if (isset($duracao->objdet) && !empty($duracao->objdet)) {
-                        $this->dom->addChild(
-                            $duracaoContrato,
-                            "objDet",
-                            $duracao->objdet,
-                            false
-                        );
-                    }
-                    $dadosCompl->appendChild($duracaoContrato);
-                }
                 if (isset($info->infocompl->infovinc->sucessaovinc)) {
                     $sucessaoVinculo = $info->infocompl->infovinc->sucessaovinc;
                     $sucessaoVinculoTrabalhista = $this->dom->createElement("sucessaoVinc");
@@ -457,7 +425,7 @@ trait TraitS2500
                         $sucessaoVinculo->dttransf,
                         true
                     );
-                    $dadosCompl->appendChild($sucessaoVinculoTrabalhista);
+                    $informacaoVinculo->appendChild($sucessaoVinculoTrabalhista);
                 }
                 if (isset($info->infocompl->infovinc->infodeslig)) {
                     $infoDesligamento = $info->infocompl->infovinc->infodeslig;
@@ -483,7 +451,7 @@ trait TraitS2500
                             false
                         );
                     }
-                    $dadosCompl->appendChild($informacaoDesligamento);
+                    $informacaoVinculo->appendChild($informacaoDesligamento);
                 }
             }
             if (isset($info->infocompl)) {
@@ -501,10 +469,10 @@ trait TraitS2500
                             $terminoTSVE,
                             "mtvDesligTSV",
                             $$termino->mtvdesligtsv,
-                            true
+                            false
                         );
                     }
-                    $dadosCompl->appendChild($terminoTSVE);
+                    $infoCompl->appendChild($terminoTSVE);
                 }
             }
             if (isset($info->mudcategativ) && !empty($info->mudcategativ)) {
@@ -531,7 +499,7 @@ trait TraitS2500
                         true
                     );
                 }
-                $dadosCompl->appendChild($mudancaCategoria);
+                $infoContr->appendChild($mudancaCategoria);
             }
             if (isset($info->uniccontr) && !empty($info->uniccontr)) {
                 $reconhecimentoUnicidade = $this->dom->createElement("unicContr");
@@ -547,7 +515,7 @@ trait TraitS2500
                     if (isset($unicidade->codcateg) && !empty($unicidade->codcateg)) {
                         $this->dom->addChild(
                             $reconhecimentoUnicidade,
-                            "matUnic",
+                            "codCateg",
                             $unicidade->codcateg,
                             false
                         );
@@ -561,7 +529,7 @@ trait TraitS2500
                         );
                     }
                 }
-                $dadosCompl->appendChild($mudancaCategoria);
+                $infoContr->appendChild($reconhecimentoUnicidade);
             }
             if (isset($info->ideestab)) {
                 $identificacaoEstabelcimento = $this->dom->createElement("ideEstab");
@@ -577,7 +545,7 @@ trait TraitS2500
                     $info->ideestab->nrinsc,
                     true
                 );
-                $dadosCompl->appendChild($identificacaoEstabelcimento);
+                $infoContr->appendChild($identificacaoEstabelcimento);
             }
             if (isset($info->ideestab->infovlr)) {
                 $informacoesValores = $this->dom->createElement("infoVlr");
@@ -635,7 +603,7 @@ trait TraitS2500
                     $info->ideestab->infovlr->pagdiretoresc,
                     false
                 );
-                $dadosCompl->appendChild($identificacaoEstabelcimento);
+                $identificacaoEstabelcimento->appendChild($informacoesValores);
             }
             if (isset($info->ideestab->infovlr->ideperiodo) &&
                 !empty($info->ideestab->infovlr->ideperiodo)) {
@@ -647,7 +615,7 @@ trait TraitS2500
                         $periodo->perref,
                         true
                     );
-                    $dadosCompl->appendChild($periodoBase);
+                    $informacoesValores->appendChild($periodoBase);
                     if (isset($info->ideestab->infovlr->ideperiodo->basecalculo)) {
                         $periodoBaseCalculo = $this->dom->createElement("baseCalculo");
                         $this->dom->addChild(
@@ -674,7 +642,7 @@ trait TraitS2500
                             $periodo->basecalculo->vrbcfgts13,
                             true
                         );
-                        $dadosCompl->appendChild($periodoBaseCalculo);
+                        $periodoBase->appendChild($periodoBaseCalculo);
                         if (isset($info->ideestab->infovlr->ideperiodo->basecalculo->infoagnocivo) &&
                             !empty($info->ideestab->infovlr->ideperiodo->basecalculo->infoagnocivo->grauexp)) {
                             $periodoBaseCalculoAgenteNocivo = $this->dom->createElement("infoAgNocivo");
@@ -682,10 +650,32 @@ trait TraitS2500
                                 $periodoBaseCalculoAgenteNocivo,
                                 "grauExp",
                                 $periodo->basecalculo->infoAgNocivo->infoAgNocivo->grauExp,
-                                false
+                                true
                             );
-                            $dadosCompl->appendChild($periodoBaseCalculoAgenteNocivo);
+                            $periodoBaseCalculo->appendChild($periodoBaseCalculoAgenteNocivo);
                         }
+                    }
+                    if (isset($info->ideestab->infovlr->ideperiodo->infofgts)) {
+                        $periodoFgts = $this->dom->createElement("infoFGTS");
+                        $this->dom->addChild(
+                            $periodoFgts,
+                            "vrBcFgtsGuia",
+                            $periodo->infofgts->vrbcfgtsguia,
+                            true
+                        );
+                        $this->dom->addChild(
+                            $periodoFgts,
+                            "vrBcFgts13Guia",
+                            $periodo->infofgts->vrbcfgtsguia,
+                            true
+                        );
+                        $this->dom->addChild(
+                            $periodoFgts,
+                            "pagDireto",
+                            $periodo->infofgts->vrbcfgtsguia,
+                            true
+                        );
+                        $periodoBase->appendChild($periodoFgts);
                         if (isset($info->ideestab->infovlr->ideperiodo->baseMudCateg) &&
                             (!empty($info->ideestab->infovlr->ideperiodo->baseMudCateg->codCateg) ||
                             !empty($info->ideestab->infovlr->ideperiodo->baseMudCateg->vrBcCPrev))) {
@@ -702,13 +692,20 @@ trait TraitS2500
                                 $periodo->basemudCateg->vrbccprev,
                                 true
                             );
-                            $dadosCompl->appendChild($periodoBaseCalculoAgenteNocivo);
+                            $periodoBaseCalculo->appendChild($periodoBaseCalculoAgenteNocivo);
                         }
                     }
                 }
-                $dadosCompl->appendChild($periodoBase);
+                $ideTrab->appendChild($periodoBase);
             }
-        }
+        } 
+        //Finaliza idTrab
+        $this->node->appendChild($ideTrab);
+
+        //finalização do xml
+        $this->eSocial->appendChild($this->node);
+        //$this->xml = $this->dom->saveXML($this->eSocial);;
+        $this->sign();
         
     }
 }
