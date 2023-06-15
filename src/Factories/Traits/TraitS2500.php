@@ -209,12 +209,14 @@ trait TraitS2500
                 !empty($info->dtadmorig) ? $info->dtadmorig : null,
                 false
             );
-            $this->dom->addChild(
-                $infoContr,
-                "indReint",
-                $info->indreint,
-                false
-            );
+            if (isset($info->indreint)) {
+                $this->dom->addChild(
+                    $infoContr,
+                    "indReint",
+                    $info->indreint,
+                    false
+                );
+            }
             $this->dom->addChild(
                 $infoContr,
                 "indCateg",
@@ -239,18 +241,22 @@ trait TraitS2500
                 $info->indunic,
                 false
             );
-            $this->dom->addChild(
-                $infoContr,
-                "matricula",
-                $info->matricula,
-                false
-            );
-            $this->dom->addChild(
-                $infoContr,
-                "codCateg",
-                $info->codcateg,
-                false
-            );
+            if (isset($info->matricula)) {
+                $this->dom->addChild(
+                    $infoContr,
+                    "matricula",
+                    $info->matricula,
+                    false
+                );
+            }
+            if (isset($info->codcateg)) {
+                $this->dom->addChild(
+                    $infoContr,
+                    "codCateg",
+                    $info->codcateg,
+                    false
+                );
+            }
             $this->dom->addChild(
                 $infoContr,
                 "dtInicio",
