@@ -134,7 +134,7 @@
                                                     "codcateg": {
                                                         "required": true,
                                                         "type": "integer",
-                                                        "minimum": 10,
+                                                        "minimum": 101,
                                                         "maximum": 905
                                                     },
                                                     "itensremun": {
