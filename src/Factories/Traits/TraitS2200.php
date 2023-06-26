@@ -2620,13 +2620,6 @@ trait TraitS2200
                     $this->std->vinculo->inforegimetrab->infoceletista->trabtemporario->justcontr,
                     true
                 );
-                $this->dom->addChild(
-                    $trabTemporario,
-                    "tpInclContr",
-                    $this->std->vinculo->inforegimetrab->infoceletista->trabtemporario->tpinclcontr,
-                    true
-                );
-
                 //identificação estabelecimento (obrigatorio)
                 $ideEstabVinc = $this->dom->createElement("ideEstabVinc");
                 $this->dom->addChild(
