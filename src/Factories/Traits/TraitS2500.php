@@ -268,18 +268,24 @@ trait TraitS2500
             if (isset($info->infocompl) && !empty($info->infocompl)) {
                 $infoCompl = $this->dom->createElement("infoCompl");
                 $compl = $info->infocompl;
-                $this->dom->addChild(
-                    $infoCompl,
-                    "codCBO",
-                    $compl->codcbo,
-                    false
-                );
-                $this->dom->addChild(
-                    $infoCompl,
-                    "natAtividade",
-                    $compl->natatividade,
-                    false
-                );
+                if (isset($compl->codcbo)) {
+                    $this->dom->addChild(
+                        $infoCompl,
+                        "codCBO",
+                        $compl->codcbo,
+                        false
+                    );
+                }
+                if (isset($compl->natatividade) && !empty($compl->natatividade)) {
+                    if ((int) $compl->natatividade > 0) {
+                        $this->dom->addChild(
+                            $infoCompl,
+                            "natAtividade",
+                            $compl->natatividade,
+                            false
+                        );
+                    }
+                }
                 $infoContr->appendChild($infoCompl);
             }
             if (isset($info->infocompl)) {
@@ -351,39 +357,41 @@ trait TraitS2500
                 }
                 if (isset($info->infocompl->infovinc)) {
                     if (isset($info->infocompl->infovinc)) {
-                        $duracao = $info->infocompl->infovinc->duracao;
-                        $duracaoContrato = $this->dom->createElement("duracao");
-                        $this->dom->addChild(
-                            $duracaoContrato,
-                            "tpContr",
-                            $duracao->tpcontr,
-                            true
-                        );
-                        if (isset($duracao->dtterm) && !empty($duracao->dtterm)) {
+                        if (isset($info->infocompl->infovinc->duracao)) {
+                            $duracao = $info->infocompl->infovinc->duracao;
+                            $duracaoContrato = $this->dom->createElement("duracao");
                             $this->dom->addChild(
                                 $duracaoContrato,
-                                "dtTerm",
-                                $duracao->dtterm,
-                                false
+                                "tpContr",
+                                $duracao->tpcontr,
+                                true
                             );
+                            if (isset($duracao->dtterm) && !empty($duracao->dtterm)) {
+                                $this->dom->addChild(
+                                    $duracaoContrato,
+                                    "dtTerm",
+                                    $duracao->dtterm,
+                                    false
+                                );
+                            }
+                            if (isset($duracao->clauassec) && !empty($duracao->clauassec)) {
+                                $this->dom->addChild(
+                                    $duracaoContrato,
+                                    "clauAssec",
+                                    $duracao->clauassec,
+                                    false
+                                );
+                            }
+                            if (isset($duracao->objdet) && !empty($duracao->objdet)) {
+                                $this->dom->addChild(
+                                    $duracaoContrato,
+                                    "objDet",
+                                    $duracao->objdet,
+                                    false
+                                );
+                            }
+                            $informacaoVinculo->appendChild($duracaoContrato);
                         }
-                        if (isset($duracao->clauassec) && !empty($duracao->clauassec)) {
-                            $this->dom->addChild(
-                                $duracaoContrato,
-                                "clauAssec",
-                                $duracao->clauassec,
-                                false
-                            );
-                        }
-                        if (isset($duracao->objdet) && !empty($duracao->objdet)) {
-                            $this->dom->addChild(
-                                $duracaoContrato,
-                                "objDet",
-                                $duracao->objdet,
-                                false
-                            );
-                        }
-                        $informacaoVinculo->appendChild($duracaoContrato);
                     }
                 }
             }
@@ -491,12 +499,14 @@ trait TraitS2500
                         true
                     );
                     if (isset($mudanca->natatividade) && !empty($mudanca->natatividade)) {
-                        $this->dom->addChild(
-                            $mudancaCategoria,
-                            "natAtividade",
-                            $mudanca->natatividade,
-                            false
-                        );
+                        if ((int) $mudanca->natatividade > 0) {
+                            $this->dom->addChild(
+                                $mudancaCategoria,
+                                "natAtividade",
+                                $mudanca->natatividade,
+                                false
+                            );
+                        }
                     }             
                     $this->dom->addChild(
                         $mudancaCategoria,
@@ -597,32 +607,35 @@ trait TraitS2500
                     $info->ideestab->infovlr->vrinden,
                     true
                 );
-                $this->dom->addChild(
-                    $informacoesValores,
-                    "vrBaseIndenFGTS",
-                    $info->ideestab->infovlr->vrbaseindenfgts,
-                    false
-                );
-                $this->dom->addChild(
-                    $informacoesValores,
-                    "pagDiretoResc",
-                    $info->ideestab->infovlr->pagdiretoresc,
-                    false
-                );
+                if (isset($info->ideestab->infovlr->vrbaseindenfgts)) {
+                    $this->dom->addChild(
+                        $informacoesValores,
+                        "vrBaseIndenFGTS",
+                        $info->ideestab->infovlr->vrbaseindenfgts,
+                        false
+                    );
+                }
+                if (isset($info->ideestab->infovlr->pagdiretoresc)) {
+                    $this->dom->addChild(
+                        $informacoesValores,
+                        "pagDiretoResc",
+                        $info->ideestab->infovlr->pagdiretoresc,
+                        false
+                    );
+                }
                 $identificacaoEstabelcimento->appendChild($informacoesValores);
             }
             if (isset($info->ideestab->infovlr->ideperiodo) &&
                 !empty($info->ideestab->infovlr->ideperiodo)) {
-                $periodoBase = $this->dom->createElement("idePeriodo");
                 foreach ($info->ideestab->infovlr->ideperiodo as $periodo) {
+                    $periodoBase = $this->dom->createElement("idePeriodo");
                     $this->dom->addChild(
                         $periodoBase,
                         "perRef",
                         $periodo->perref,
                         true
                     );
-                    $informacoesValores->appendChild($periodoBase);
-                    if (isset($info->ideestab->infovlr->ideperiodo->basecalculo)) {
+                    if (isset($periodo->basecalculo->vrbccpmensal)) {
                         $periodoBaseCalculo = $this->dom->createElement("baseCalculo");
                         $this->dom->addChild(
                             $periodoBaseCalculo,
@@ -649,19 +662,18 @@ trait TraitS2500
                             true
                         );
                         $periodoBase->appendChild($periodoBaseCalculo);
-                        if (isset($info->ideestab->infovlr->ideperiodo->basecalculo->infoagnocivo) &&
-                            !empty($info->ideestab->infovlr->ideperiodo->basecalculo->infoagnocivo->grauexp)) {
+                        if (isset($periodo->basecalculo->infoagnocivo)) {
                             $periodoBaseCalculoAgenteNocivo = $this->dom->createElement("infoAgNocivo");
                             $this->dom->addChild(
                                 $periodoBaseCalculoAgenteNocivo,
                                 "grauExp",
-                                $periodo->basecalculo->infoAgNocivo->infoAgNocivo->grauExp,
+                                $periodo->basecalculo->infoagnocivo->grauexp,
                                 true
                             );
                             $periodoBaseCalculo->appendChild($periodoBaseCalculoAgenteNocivo);
                         }
                     }
-                    if (isset($info->ideestab->infovlr->ideperiodo->infofgts)) {
+                    if (isset($periodo->infofgts)) {
                         $periodoFgts = $this->dom->createElement("infoFGTS");
                         $this->dom->addChild(
                             $periodoFgts,
@@ -682,9 +694,9 @@ trait TraitS2500
                             true
                         );
                         $periodoBase->appendChild($periodoFgts);
-                        if (isset($info->ideestab->infovlr->ideperiodo->baseMudCateg) &&
-                            (!empty($info->ideestab->infovlr->ideperiodo->baseMudCateg->codCateg) ||
-                            !empty($info->ideestab->infovlr->ideperiodo->baseMudCateg->vrBcCPrev))) {
+                        if (isset($periodo->baseMudCateg) &&
+                            (!empty($periodo->baseMudCateg->codCateg) ||
+                            !empty($periodo->baseMudCateg->vrBcCPrev))) {
                             $periodoBasePrevidenciaria = $this->dom->createElement("baseMudCateg");
                             $this->dom->addChild(
                                 $periodoBasePrevidenciaria,
@@ -698,11 +710,11 @@ trait TraitS2500
                                 $periodo->basemudCateg->vrbccprev,
                                 true
                             );
-                            $periodoBaseCalculo->appendChild($periodoBaseCalculoAgenteNocivo);
+                            $periodoFgts->appendChild($periodoBasePrevidenciaria);
                         }
                     }
+                    $informacoesValores->appendChild($periodoBase);
                 }
-                $ideTrab->appendChild($periodoBase);
             }
         } 
         //Finaliza idTrab
