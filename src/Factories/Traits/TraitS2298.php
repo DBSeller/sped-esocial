@@ -266,13 +266,13 @@ trait TraitS2298
         $this->dom->addChild(
             $ideVinculo,
             "cpfTrab",
-            $this->std->cpftrab,
+            $this->std->idevinculo->cpftrab,
             true
         );
         $this->dom->addChild(
             $ideVinculo,
             "matricula",
-            $this->std->matricula,
+            $this->std->idevinculo->matricula,
             true
         );
         $this->node->appendChild($ideVinculo);
@@ -281,31 +281,31 @@ trait TraitS2298
         $this->dom->addChild(
             $infoReintegr,
             "tpReint",
-            $this->std->tpreint,
+            $this->std->inforeintegr->tpreint,
             true
         );
         $this->dom->addChild(
             $infoReintegr,
             "nrProcJud",
-            ! empty($this->std->nrprocjud) ? $this->std->nrprocjud : null,
+            ! empty($this->std->inforeintegr->nrprocjud) ? $this->std->inforeintegr->nrprocjud : null,
             false
         );
         $this->dom->addChild(
             $infoReintegr,
             "nrLeiAnistia",
-            ! empty($this->std->nrleianistia) ? $this->std->nrleianistia : null,
+            ! empty($this->std->inforeintegr->nrleianistia) ? $this->std->inforeintegr->leianistia : null,
             false
         );
         $this->dom->addChild(
             $infoReintegr,
             "dtEfetRetorno",
-            $this->std->dtefetretorno,
+            $this->std->inforeintegr->dtefetretorno,
             true
         );
         $this->dom->addChild(
             $infoReintegr,
             "dtEfeito",
-            $this->std->dtefeito,
+            $this->std->inforeintegr->dtefeito,
             true
         );
         $this->node->appendChild($infoReintegr);
