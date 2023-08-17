@@ -128,7 +128,7 @@ trait TraitS2501
          * A rotina comentada abaixo poderá ser utilizada no auxilio da montagem da estrutura do XML.
          * Ela apoderá ser colocada abaixo de cada nó.
          * Por exemplo, abaixo da linha 89 e terá a visualização até o nó ideTrab.
-         * Ao executar, no terminal, o comando php7.2 artisan esocial:consulta será exibido a estrutura.
+         * Ao executar, no terminal, o comando php artisan esocial:consulta será exibido a estrutura.
         */
 
         // $this->xml = $this->dom->saveXML($this->eSocial);

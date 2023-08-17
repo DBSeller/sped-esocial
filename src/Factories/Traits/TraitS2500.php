@@ -690,7 +690,7 @@ trait TraitS2500
                         $this->dom->addChild(
                             $periodoFgts,
                             "pagDireto",
-                            $periodo->infofgts->vrbcfgtsguia,
+                            $periodo->infofgts->pagdireto,
                             true
                         );
                         $periodoBase->appendChild($periodoFgts);
