@@ -1,0 +1,722 @@
+{
+    "required": true,
+    "type": "array",
+    "minItems": 1,
+    "items": {
+        "title": "evtProcTrab",
+        "type": "object",
+        "properties": {
+            "inscricao_empregador": {
+                "required": true,
+                "type": "string",
+                "maxLength": 15
+            },
+            "referencia": {
+                "required": true,
+                "type": "string",
+                "maxLength": 255
+            },
+            "ideResp": {
+                "required": false,
+                "type": ["object", "null"],
+                "properties": {
+                    "tpInsc": {
+                        "required": true,
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 1
+                    },
+                    "nrInsc": {
+                        "required": true,
+                        "type": "string",
+                        "pattern": "^[0-9]{16}|[0-9]{17}|[0-9]{20}|[0-9]{21}$",
+                        "maxLength": 14
+                    }
+                }
+            },
+            "infoProcesso": {
+                "required": true,
+                "type": "object",
+                "properties": {
+                    "origem": {
+                        "required": true,
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 1
+                    },
+                    "nrProcTrab": {
+                        "required": true,
+                        "type": "string",
+                        "minLength": 14,
+                        "maxLength": 20
+                    },
+                    "obsProcTrab": {
+                        "required": false,
+                        "type": "string",
+                        "minLength": 0,
+                        "maxLength": 999
+                    },
+                    "dadosCompl": {
+                        "required": true,
+                        "type": "object",
+                        "properties": {
+                            "infoProcJud": {
+                                "required": false,
+                                "type": ["object", "null"],
+                                "properties": {
+                                    "dtSent": {
+                                        "required": true,
+                                        "type": "string",
+                                        "pattern": "^(19[0-9][0-9]|2[0-9][0-9][0-9])[-/](0?[1-9]|1[0-2])[-/](0?[1-9]|[12][0-9]|3[01])$"
+                                    },
+                                    "ufVara": {
+                                        "required": true,
+                                        "type": "string",
+                                        "minLength": 2,
+                                        "maxLength": 2
+                                    },
+                                    "codMunic": {
+                                        "required":true,
+                                        "type":"string",
+                                        "minLength":7,
+                                        "maxLength":7,
+                                        "pattern":"\\d{7}"
+                                    },
+                                    "idVara": {
+                                        "required": true,
+                                        "type": "string",
+                                        "maxLength": 4
+                                    }
+                                }
+                            },
+                            "infoCCP": {
+                                "required": false,
+                                "type": ["object", "null"],
+                                "properties": {
+                                    "dtCCP": {
+                                        "required": true,
+                                        "type": "string",
+                                        "pattern": "^(19[0-9][0-9]|2[0-9][0-9][0-9])[-/](0?[1-9]|1[0-2])[-/](0?[1-9]|[12][0-9]|3[01])$"
+                                    },
+                                    "tpCCP": {
+                                        "required": true,
+                                        "type": "integer",
+                                        "minLength": 1,
+                                        "maxLength": 1
+                                    },
+                                    "cnpjCCP": {
+                                        "required": false,
+                                        "type": "string",
+                                        "minLength": 14,
+                                        "maxLength": 14,
+                                        "pattern": "^[0-9]"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "ideTrab": {
+                "required": true,
+                "type": "object",
+                "properties": {
+                    "cpfTrab": {
+                        "required": true,
+                        "type": "string",
+                        "minLength": 11,
+                        "maxLength": 11,
+                        "pattern": "^[0-9]"
+                    },
+                    "nmTrab": {
+                        "required": false,
+                        "type": "string",
+                        "minLength": 2,
+                        "maxLength": 70
+                    },
+                    "dtNascto": {
+                        "required": false,
+                        "type": "string",
+                        "pattern": "^(19[0-9][0-9]|2[0-9][0-9][0-9])[-/](0?[1-9]|1[0-2])[-/](0?[1-9]|[12][0-9]|3[01])$"
+                    },
+                    "dependente": {
+                        "required": false,
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "minItems": 0,
+                        "maxItems": 99,
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "cpfDep": {
+                                    "required": true,
+                                    "type": "string",
+                                    "minLength": 11,
+                                    "maxLength": 11,
+                                    "pattern": "\\d{11}"
+                                },
+                                "tpDep": {
+                                    "required": true,
+                                    "type": "string",
+                                    "minLength": 2,
+                                    "maxLength": 2,
+                                    "pattern": "^[0-9]"
+                                },
+                                "descDep": {
+                                    "required": false,
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 30
+                                }
+                            }
+                        }
+                    }
+                },
+                "infoContr": {
+                    "required": true,
+                    "type": [
+                        "array",
+                        "null"
+                    ],
+                    "minItems": 1,
+                    "maxItems": 99,
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "tpContr": {
+                                "required": true,
+                                "type": "integer",
+                                "pattern": "^[0-9]"
+                            },
+                            "indContr": {
+                                "required": true,
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 1
+                            },
+                            "dtAdmOrig": {
+                                "required": false,
+                                "type": "string",
+                                "pattern": "^(19[0-9][0-9]|2[0-9][0-9][0-9])[-/](0?[1-9]|1[0-2])[-/](0?[1-9]|[12][0-9]|3[01])$"
+                            },
+                            "indReint": {
+                                "required": false,
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 1
+                            },
+                            "indCateg": {
+                                "required": true,
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 1
+                            },
+                            "indNatAtiv": {
+                                "required": true,
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 1
+                            },
+                            "indMotDeslig": {
+                                "required": true,
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 1
+                            },
+                            "indUnic": {
+                                "required": false,
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 1
+                            },
+                            "matricula": {
+                                "required": false,
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 30
+                            },
+                            "codCateg": {
+                                "required": false,
+                                "type": "integer",
+                                "minLength": 3,
+                                "maxLength": 3,
+                                "pattern": "^[0-9]"
+                            },
+                            "dtInicio": {
+                                "required": false,
+                                "type": "string",
+                                "pattern": "^(19[0-9][0-9]|2[0-9][0-9][0-9])[-/](0?[1-9]|1[0-2])[-/](0?[1-9]|[12][0-9]|3[01])$"
+                            },
+                            "infoCompl": {
+                                "required": false,
+                                "type": [
+                                    "object",
+                                    "null"
+                                ],
+                                "properties": {
+                                    "codCBO": {
+                                        "required": false,
+                                        "type": "integer",
+                                        "minLength": 6,
+                                        "maxLength": 6,
+                                        "pattern": "^[0-9]"
+                                    },
+                                    "natAtividade": {
+                                        "required": false,
+                                        "type": "integer",
+                                        "minLength": 1,
+                                        "maxLength": 1,
+                                        "pattern": "^[0-9]"
+                                    }
+                                },
+                                "remuneracao": {
+                                    "required": false,
+                                    "type": [
+                                        "array",
+                                        "null"
+                                    ],
+                                    "minItems": 1,
+                                    "maxItems": 99,
+                                    "items": {
+                                        "dtRemun": {
+                                            "required": true,
+                                            "type": "string",
+                                            "pattern": "^(19[0-9][0-9]|2[0-9][0-9][0-9])[-/](0?[1-9]|1[0-2])[-/](0?[1-9]|[12][0-9]|3[01])$"
+                                        },
+                                        "vrSalFx": {
+                                            "required": true,
+                                            "type": [
+                                                "number",
+                                                "null"
+                                            ]
+                                        },
+                                        "undSalFixo": {
+                                            "required": true,
+                                            "type": "integer",
+                                            "minLength": 1,
+                                            "maxLength": 1,
+                                            "pattern": "^[0-9]"
+                                        },
+                                        "dscSalVar": {
+                                            "required": false,
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 999
+                                        }
+                                    }
+                                },
+                                "infoVinc": {
+                                    "required": false,
+                                    "type": ["object", "null"],
+                                    "properties": {
+                                        "tpRegTrab": {
+                                            "required": true,
+                                            "type": "integer",
+                                            "minLength": 1,
+                                            "maxLength": 1,
+                                            "pattern": "^[0-9]"
+                                        },
+                                        "tpRegPrev": {
+                                            "required": true,
+                                            "type": "integer",
+                                            "minLength": 1,
+                                            "maxLength": 1,
+                                            "pattern": "^[0-9]"
+                                        },
+                                        "dtAdm": {
+                                            "required": true,
+                                            "type": "string",
+                                            "pattern": "^(19[0-9][0-9]|2[0-9][0-9][0-9])[-/](0?[1-9]|1[0-2])[-/](0?[1-9]|[12][0-9]|3[01])$"
+                                        },
+                                        "tmpParc": {
+                                            "required": false,
+                                            "type": "integer",
+                                            "minLength": 1,
+                                            "maxLength": 1,
+                                            "pattern": "^[0-9]"
+                                        },
+                                        "duracao": {
+                                            "required": false,
+                                            "type": ["object", "null"],
+                                            "properties": {
+                                                "tpContr": {
+                                                    "required": true,
+                                                    "type": "integer",
+                                                    "minLength": 1,
+                                                    "maxLength": 1,
+                                                    "pattern": "^[0-9]"
+                                                },
+                                                "dtTerm": {
+                                                    "required": false,
+                                                    "type": "string",
+                                                    "pattern": "^(19[0-9][0-9]|2[0-9][0-9][0-9])[-/](0?[1-9]|1[0-2])[-/](0?[1-9]|[12][0-9]|3[01])$"
+                                                },
+                                                "clauAssec": {
+                                                    "required": false,
+                                                    "type": "string",
+                                                    "minLength": 1,
+                                                    "maxLength": 1  
+                                                },
+                                                "objDet": {
+                                                    "required": false,
+                                                    "type": "string",
+                                                    "minLength": 1,
+                                                    "maxLength": 255  
+                                                }
+                                            }
+                                        },
+                                        "observacoes": {
+                                            "required": false,
+                                            "type": [
+                                                "array",
+                                                "null"
+                                            ],
+                                            "minItems": 1,
+                                            "maxItems": 99,
+                                            "items": {
+                                                "objDet": {
+                                                    "required": true,
+                                                    "type": "string",
+                                                    "minLength": 1,
+                                                    "maxLength": 255  
+                                                }
+                                            }
+                                        },
+                                        "sucessaoVinc": {
+                                            "required": false,
+                                            "type": ["object", "null"],
+                                            "properties": {
+                                                "tpInsc": {
+                                                    "required": true,
+                                                    "type": "integer",
+                                                    "minLength": 1,
+                                                    "maxLength": 1,
+                                                    "pattern": "^[0-9]"
+                                                },
+                                                "nrInsc": {
+                                                    "required": true,
+                                                    "type": "string",
+                                                    "minLength": 8,
+                                                    "maxLength": 14,
+                                                    "pattern": "^[0-9]"
+                                                },
+                                                "matricAnt": {
+                                                    "required": false,
+                                                    "type": "string",
+                                                    "minLength": 1,
+                                                    "maxLength": 30
+                                                },
+                                                "dtTransf": {
+                                                    "required": false,
+                                                    "type": "string",
+                                                    "pattern": "^(19[0-9][0-9]|2[0-9][0-9][0-9])[-/](0?[1-9]|1[0-2])[-/](0?[1-9]|[12][0-9]|3[01])$"
+                                                }
+                                            }
+                                        },
+                                        "infoDeslig": {
+                                            "required": false,
+                                            "type": "object",
+                                            "properties": {
+                                                "dtDeslig": {
+                                                    "required": true,
+                                                    "type": "string",
+                                                    "pattern": "^(19[0-9][0-9]|2[0-9][0-9][0-9])[-/](0?[1-9]|1[0-2])[-/](0?[1-9]|[12][0-9]|3[01])$"
+                                                },
+                                                "mtvDeslig": {
+                                                    "required": true,
+                                                    "type": "string",
+                                                    "minLength": 2,
+                                                    "maxLength": 2
+                                                },
+                                                "dtProjFimAPI": {
+                                                    "required": false,
+                                                    "type": "string",
+                                                    "pattern": "^(19[0-9][0-9]|2[0-9][0-9][0-9])[-/](0?[1-9]|1[0-2])[-/](0?[1-9]|[12][0-9]|3[01])$"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "infoTerm": {
+                                    "required": false,
+                                    "type": "object",
+                                    "properties": {
+                                        "dtTerm": {
+                                            "required": true,
+                                            "type": "string",
+                                            "pattern": "^(19[0-9][0-9]|2[0-9][0-9][0-9])[-/](0?[1-9]|1[0-2])[-/](0?[1-9]|[12][0-9]|3[01])$"
+                                        },
+                                        "mtvDeslig": {
+                                            "required": false,
+                                            "type": "string",
+                                            "minLength": 2,
+                                            "maxLength": 2
+                                        }
+                                    }
+                                }
+                            },
+                            "ideEstab": {
+                                "required": false,
+                                "type": "object",
+                                "properties": {
+                                    "tpInsc": {
+                                        "required": true,
+                                        "type": "integer",
+                                        "minLength": 1,
+                                        "maxLength": 1,
+                                        "pattern": "^[0-9]"
+                                    },
+                                    "nrInsc": {
+                                        "required": true,
+                                        "type": "string",
+                                        "minLength": 8,
+                                        "maxLength": 14,
+                                        "pattern": "^[0-9]"
+                                    },
+                                    "infoVlr": {
+                                        "required": false,
+                                        "type": "object",
+                                        "properties": {
+                                            "compIni": {
+                                                "required": true,
+                                                "type": "string",
+                                                "minLength": 7,
+                                                "maxLength": 7
+                                            },
+                                            "compFim": {
+                                                "required": true,
+                                                "type": "string",
+                                                "minLength": 7,
+                                                "maxLength": 7
+                                            },
+                                            "repercProc": {
+                                                "required": true,
+                                                "type": "integer",
+                                                "minLength": 1,
+                                                "maxLength": 1,
+                                                "pattern": "^[0-9]"
+                                            },
+                                            "vrRemun": {
+                                                "required": true,
+                                                "type": [
+                                                    "number",
+                                                    "null"
+                                                ]
+                                            },
+                                            "vrAPI": {
+                                                "required": true,
+                                                "type": [
+                                                    "number",
+                                                    "null"
+                                                ]
+                                            },
+                                            "vr13API": {
+                                                "required": true,
+                                                "type": [
+                                                    "number",
+                                                    "null"
+                                                ]
+                                            },
+                                            "vrInden": {
+                                                "required": true,
+                                                "type": [
+                                                    "number",
+                                                    "null"
+                                                ]
+                                            },
+                                            "vrBaseIndenFGTS": {
+                                                "required": true,
+                                                "type": [
+                                                    "number",
+                                                    "null"
+                                                ]
+                                            },
+                                            "pagDiretoResc": {
+                                                "required": false,
+                                                "type": "string",
+                                                "minLength": 1,
+                                                "maxLength": 1
+                                            },
+                                            "idePeriodo": {
+                                                "required": false,
+                                                "type": [
+                                                    "array",
+                                                    "null"
+                                                ],
+                                                "minItems": 0,
+                                                "maxItems": 360,
+                                                "items": {
+                                                    "perRef": {
+                                                        "required": true,
+                                                        "type": "string",
+                                                        "minLength": 7,
+                                                        "maxLength": 7
+                                                    },
+                                                    "baseCalculo": {
+                                                        "required": true,
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "vrBcCpMensal": {
+                                                                "required": true,
+                                                                "type": [
+                                                                    "number",
+                                                                    "null"
+                                                                ]
+                                                            },
+                                                            "vrBcCp13": {
+                                                                "required": true,
+                                                                "type": [
+                                                                    "number",
+                                                                    "null"
+                                                                ]
+                                                            },
+                                                            "vrBcFgts": {
+                                                                "required": true,
+                                                                "type": [
+                                                                    "number",
+                                                                    "null"
+                                                                ]
+                                                            },
+                                                            "vrBcFgts13": {
+                                                                "required": true,
+                                                                "type": [
+                                                                    "number",
+                                                                    "null"
+                                                                ]
+                                                            },
+                                                            "infoAgNocivo": {
+                                                                "required": false,
+                                                                "type": "object",
+                                                                "properties": {
+                                                                    "grauExp": {
+                                                                        "required": true,
+                                                                        "type": "integer",
+                                                                        "minLength": 1,
+                                                                        "maxLength": 1,
+                                                                        "pattern": "^[0-9]"
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    },
+                                                    "infoFGTS": {
+                                                        "required": false,
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "vrBcFgtsGuia": {
+                                                                "required": true,
+                                                                "type": [
+                                                                    "number",
+                                                                    "null"
+                                                                ]
+                                                            },
+                                                            "vrBcFgts13Guia": {
+                                                                "required": true,
+                                                                "type": [
+                                                                    "number",
+                                                                    "null"
+                                                                ]
+                                                            },
+                                                            "pagDireto": {
+                                                                "required": true,
+                                                                "type": [
+                                                                    "number",
+                                                                    "null"
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    "baseMudCateg": {
+                                                        "required": false,
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "codCateg": {
+                                                                "required": false,
+                                                                "type": "integer",
+                                                                "minLength": 3,
+                                                                "maxLength": 3,
+                                                                "pattern": "^[0-9]"
+                                                            },
+                                                            "vrBcCPrev": {
+                                                                "required": true,
+                                                                "type": [
+                                                                    "number",
+                                                                    "null"
+                                                                ]
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "mudCategAtiv": {
+                    "required": false,
+                    "type": [
+                        "array",
+                        "null"
+                    ],
+                    "minItems": 0,
+                    "maxItems": 99,
+                    "items": {
+                        "codCateg": {
+                            "required": true,
+                            "type": "integer",
+                            "minLength": 3,
+                            "maxLength": 3,
+                            "pattern": "^[0-9]"
+                        },
+                        "natAtividade": {
+                            "required": false,
+                            "type": "integer",
+                            "minLength": 1,
+                            "maxLength": 1,
+                            "pattern": "^[0-9]"
+                        },
+                        "dtMudCategAtiv": {
+                            "required": true,
+                            "type": "string",
+                            "pattern": "^(19[0-9][0-9]|2[0-9][0-9][0-9])[-/](0?[1-9]|1[0-2])[-/](0?[1-9]|[12][0-9]|3[01])$"
+                        }
+                    }
+                },
+                "unicContr": {
+                    "required": false,
+                    "type": [
+                        "array",
+                        "null"
+                    ],
+                    "minItems": 0,
+                    "maxItems": 99,
+                    "items": {
+                        "matricAnt": {
+                            "required": false,
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 30
+                        },
+                        "codCateg": {
+                            "required": false,
+                            "type": "integer",
+                            "minLength": 3,
+                            "maxLength": 3,
+                            "pattern": "^[0-9]"
+                        },
+                        "dtInicio": {
+                            "required": false,
+                            "type": "string",
+                            "pattern": "^(19[0-9][0-9]|2[0-9][0-9][0-9])[-/](0?[1-9]|1[0-2])[-/](0?[1-9]|[12][0-9]|3[01])$"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
