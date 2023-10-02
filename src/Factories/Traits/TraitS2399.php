@@ -673,12 +673,14 @@ trait TraitS2399
             !empty($this->std->infotsvtermino->mtvdesligtsv) ? $this->std->infotsvtermino->mtvdesligtsv : null,
             false
         );
-        $this->dom->addChild(
-            $infoTSVTermino,
-            "pensAlim",
-            !empty($this->std->infotsvtermino->pensalim) ? $this->std->infotsvtermino->pensalim : null,
-            false
-        );
+        if (isset($this->std->infotsvtermino->pensalim)) {
+            $this->dom->addChild(
+                $infoTSVTermino,
+                "pensAlim",
+                $this->std->infotsvtermino->pensalim,
+                false
+            );
+        }
         $this->dom->addChild(
             $infoTSVTermino,
             "percAliment",
