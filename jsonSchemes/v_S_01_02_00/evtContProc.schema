@@ -1,0 +1,135 @@
+{
+    "required": true,
+    "type": "array",
+    "minItems": 1,
+    "items": {
+        "title": "evtContProc",
+        "type": "object",
+        "properties": {
+            "inscricao_empregador": {
+                "required": true,
+                "type": "string",
+                "maxLength": 15
+            },
+            "referencia": {
+                "required": true,
+                "type": "string",
+                "maxLength": 255
+            },
+            "ideProc": {
+                "required": true,
+                "type": "object",
+                "properties": {
+                    "nrProcTrab": {
+                        "required": true,
+                        "type": "string",
+                        "minLength": 14,
+                        "maxLength": 20
+                    },
+                    "perApurPgto": {
+                        "required": true,
+                        "type": "string",
+                        "minLength": 7,
+                        "maxLength": 7
+                    },
+                    "obs": {
+                        "required": false,
+                        "type": "string",
+                        "minLength": 0,
+                        "maxLength": 99
+                    }
+                }
+            },
+            "ideTrab": {
+                "required": true,
+                "type": ["array"],
+                "minItems": 1,
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "cpfTrab": {
+                            "required": true,
+                            "type": "string",
+                            "minLength": 11,
+                            "maxLength": 11,
+                            "pattern": "\\d{11}"
+                        }
+                    },
+                    "calcTrib": {
+                        "required": true,
+                        "type": ["array"],
+                        "minItems": 1,
+                        "maxItems": 360,
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "perRef": {
+                                    "required": true,
+                                    "type": "string",
+                                    "minLength": 7,
+                                    "maxLength": 7
+                                },
+                                "vrBcCpMensal": {
+                                    "required": true,
+                                    "type": "number"
+                                },
+                                "vrBcCp13": {
+                                    "required": true,
+                                    "type": "number"
+                                },
+                                "vrRendIRRF": {
+                                    "required": true,
+                                    "type": "number"
+                                },
+                                "vrRendIRRF13": {
+                                    "required": true,
+                                    "type": "number"
+                                },
+                                "infoCRContrib": {
+                                    "required": false,
+                                    "type": ["array", "null"],
+                                    "minItems": 0,
+                                    "maxItems": 99,
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "tpCR": {
+                                                "required": true,
+                                                "type": "integer",
+                                                "pattern": "\\d{6}"
+                                            },
+                                            "vrCR": {
+                                                "required": true,
+                                                "type": "numeric"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "infoCRIRRF": {
+                        "required": false,
+                        "type": ["array", "null"],
+                        "minItems": 0,
+                        "maxItems": 99,
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "tpCR": {
+                                    "required": true,
+                                    "type": "integer",
+                                    "pattern": "\\d{6}"
+                                },
+                                "vrCR": {
+                                    "required": true,
+                                    "type": "numeric"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
