@@ -817,12 +817,12 @@ trait TraitS2306
             false
         );
         $infoComplementares = null;
-
+        
         if (isset($this->std->infotsvalteracao->infocomplementares->cargofuncao)) {
             $infoComplementares = $this->dom->createElement("infoComplementares");
             $stdCargofuncao = $this->std->infotsvalteracao->infocomplementares->cargofuncao;
             $cargoFuncao = $this->dom->createElement("cargoFuncao");
-
+            
             if (isset($stdCargofuncao->nmcargo) && !empty($stdCargofuncao->nmcargo)) {
                 $this->dom->addChild(
                     $cargoFuncao,
@@ -831,7 +831,7 @@ trait TraitS2306
                     true
                 );
             }
-
+            
             if (isset($stdCargofuncao->cbocargo) && !empty($stdCargofuncao->cbocargo)) {
                 $this->dom->addChild(
                     $cargoFuncao,
@@ -840,7 +840,7 @@ trait TraitS2306
                     true
                 );
             }
-
+            
             if (isset($stdCargofuncao->nmfuncao) && !empty($stdCargofuncao->nmfuncao)) {
                 $this->dom->addChild(
                     $cargoFuncao,
@@ -861,11 +861,11 @@ trait TraitS2306
 
             $infoComplementares->appendChild($cargoFuncao);
         }
-
+        
         if (isset($this->std->infotsvalteracao->infocomplementares->remuneracao)) {
             $remuneracao = $this->dom->createElement("remuneracao");
             $stdRemuneracao = $this->std->infotsvalteracao->infocomplementares->remuneracao;
-
+            
             $this->dom->addChild(
                 $remuneracao,
                 "vrSalFx",
@@ -879,7 +879,7 @@ trait TraitS2306
                 $stdRemuneracao->undsalfixo,
                 true
             );
-
+            
             $this->dom->addChild(
                 $remuneracao,
                 "dscSalVar",
@@ -906,10 +906,10 @@ trait TraitS2306
             }
             $infoComplementares->appendChild($infoDirigenteSindical);
         }
-
-
-        if (!empty($this->std->infoComplementares->trabcedido)) {
-            $trab = $this->std->infoComplementares->trabcedido;
+               
+        if (!empty( $this->std->infotsvalteracao->infocomplementares->infotrabcedido)) {
+            
+            $trab =  $this->std->infotsvalteracao->infocomplementares->infotrabcedido;
             $infoTrabCedido = $this->dom->createElement("infoTrabCedido");
             $this->dom->addChild(
                 $infoTrabCedido,
