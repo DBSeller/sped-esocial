@@ -336,4 +336,118 @@ trait TraitS1299
         //$this->xml = $this->dom->saveXML($this->eSocial);
         $this->sign();
     }
+
+    /**
+     * builder for version S.1.2.0
+     */
+    protected function toNodeS120()
+    {
+        $ideEmpregador = $this->node->getElementsByTagName('ideEmpregador')->item(0);
+        //o idEvento pode variar de evento para evento
+        //então cada factory individualmente terá de construir o seu
+        $ideEvento = $this->dom->createElement("ideEvento");
+        $this->dom->addChild(
+            $ideEvento,
+            "indApuracao",
+            $this->std->indapuracao,
+            true
+        );
+        $this->dom->addChild(
+            $ideEvento,
+            "perApur",
+            $this->std->perapur,
+            true
+        );
+        if (!empty($this->std->indguia)) {
+            $this->dom->addChild(
+                $ideEvento,
+                "indGuia",
+                $this->std->indguia,
+                false
+            );
+        }
+        $this->dom->addChild(
+            $ideEvento,
+            "tpAmb",
+            $this->tpAmb,
+            true
+        );
+        $this->dom->addChild(
+            $ideEvento,
+            "procEmi",
+            $this->procEmi,
+            true
+        );
+        $this->dom->addChild(
+            $ideEvento,
+            "verProc",
+            $this->verProc,
+            true
+        );
+        $this->node->insertBefore($ideEvento, $ideEmpregador);
+
+        $infoFech = $this->dom->createElement("infoFech");
+        $fech = $this->std->infofech;
+        $this->dom->addChild(
+            $infoFech,
+            "evtRemun",
+            $fech->evtremun,
+            true
+        );
+        $this->dom->addChild(
+            $infoFech,
+            "evtPgtos",
+            $fech->evtpgtos,
+            true
+        );
+        $this->dom->addChild(
+            $infoFech,
+            "evtComProd",
+            $fech->evtcomprod,
+            true
+        );
+        $this->dom->addChild(
+            $infoFech,
+            "evtContratAvNP",
+            $fech->evtcontratavnp,
+            true
+        );
+        $this->dom->addChild(
+            $infoFech,
+            "evtInfoComplPer",
+            $fech->evtinfocomplper,
+            true
+        );
+        if (!empty($fech->indexcapur1250)) {
+            $this->dom->addChild(
+                $infoFech,
+                "indExcApur1250",
+                ($fech->indexcapur1250 == 'S') ? $fech->indexcapur1250 : null, //aceita somente S
+                false
+            );
+        }
+
+        if (!empty($fech->transdctfweb)) {
+            $this->dom->addChild(
+                $infoFech,
+                "transDCTFWeb",
+                ($fech->transdctfweb == 'S') ? $fech->transdctfweb : null, //aceita somente S
+                false
+            );
+        }
+
+        if (!empty($fech->naovalid)) {
+            $this->dom->addChild(
+                $infoFech,
+                "naoValid",
+                ($fech->naovalid == 'S') ? $fech->naovalid : null, //aceita somente S
+                false
+            );
+        }
+
+        $this->node->appendChild($infoFech);
+        $this->eSocial->appendChild($this->node);
+        //$this->xml = $this->dom->saveXML($this->eSocial);
+        $this->sign();
+    }
 }
