@@ -2864,6 +2864,15 @@ trait TraitS2300
                     $dep->inctrab,
                     true
                 );
+
+                if (isset($dep->descrDep) && !empty($dep->descrDep)) {
+                    $this->dom->addChild(
+                        $dependente,
+                        "descrDep",
+                        $dep->descrDep,
+                        true
+                    );
+                }
                 $trabalhador->appendChild($dependente);
             }
         }
