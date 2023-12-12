@@ -1663,11 +1663,11 @@ trait TraitS2205
                     true
                 );
 
-                if (isset($dep->descrDep) && !empty($dep->descrDep)) {
+                if (isset($dep->descrdep) && !empty($dep->descrdep)) {
                     $this->dom->addChild(
                         $dependente,
                         "descrDep",
-                        $dep->descrDep,
+                        $dep->descrdep,
                         true
                     );
                 }

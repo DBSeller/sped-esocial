@@ -3446,11 +3446,11 @@ trait TraitS2200
                     $dep->inctrab,
                     true
                 );
-                if (isset($dep->descrDep) && !empty($dep->descrDep)) {
+                if (isset($dep->descrdep) && !empty($dep->descrdep)) {
                     $this->dom->addChild(
                         $dependente,
                         "descrDep",
-                        $dep->descrDep,
+                        $dep->descrdep,
                         true
                     );
                 }
@@ -3620,16 +3620,16 @@ trait TraitS2200
                 $this->dom->addChild(
                     $aprendiz,
                     "indAprend",
-                    $this->std->vinculo->inforegimetrab->infoceletista->aprend->indAprend,
+                    $this->std->vinculo->inforegimetrab->infoceletista->aprend->indaprend,
                     true
                 );
 
-                if (isset($this->std->vinculo->inforegimetrab->infoceletista->aprend->cnpjEntQual)
-                    && !empty($this->std->vinculo->inforegimetrab->infoceletista->aprend->cnpjEntQual)) {
+                if (isset($this->std->vinculo->inforegimetrab->infoceletista->aprend->cnpjentqual)
+                    && !empty($this->std->vinculo->inforegimetrab->infoceletista->aprend->cnpjentqual)) {
                     $this->dom->addChild(
                         $aprendiz,
                         "cnpjEntQual",
-                        $this->std->vinculo->inforegimetrab->infoceletista->aprend->cnpjEntQual,
+                        $this->std->vinculo->inforegimetrab->infoceletista->aprend->cnpjentqual,
                         true
                     );
                 }
@@ -3654,12 +3654,12 @@ trait TraitS2200
                     );
                 }
                 
-                if (isset($this->std->vinculo->inforegimetrab->infoceletista->aprend->cnpjPrat)
-                && !empty($this->std->vinculo->inforegimetrab->infoceletista->aprend->cnpjPrat)) {
+                if (isset($this->std->vinculo->inforegimetrab->infoceletista->aprend->cnpjprat)
+                && !empty($this->std->vinculo->inforegimetrab->infoceletista->aprend->cnpjprat)) {
                     $this->dom->addChild(
                         $aprendiz,
                         "cnpjPrat",
-                        $this->std->vinculo->inforegimetrab->infoceletista->aprend->cnpjPrat,
+                        $this->std->vinculo->inforegimetrab->infoceletista->aprend->cnpjprat,
                         true
                     );
                 }

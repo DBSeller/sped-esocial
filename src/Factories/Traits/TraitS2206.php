@@ -1426,16 +1426,16 @@ trait TraitS2206
                 $this->dom->addChild(
                     $aprend,
                     "indAprend",
-                    $this->std->altcontratual->vinculo->inforegimetrab->infoceletista->aprend->indAprend,
+                    $this->std->altcontratual->vinculo->inforegimetrab->infoceletista->aprend->indaprend,
                     true
                 );
 
-                if (isset($this->std->altcontratual->vinculo->inforegimetrab->infoceletista->aprend->cnpjEntQual)
-                    && !empty($this->std->altcontratual->vinculo->inforegimetrab->infoceletista->aprend->cnpjEntQual)) {
+                if (isset($this->std->altcontratual->vinculo->inforegimetrab->infoceletista->aprend->cnpjentqual)
+                    && !empty($this->std->altcontratual->vinculo->inforegimetrab->infoceletista->aprend->cnpjentqual)) {
                     $this->dom->addChild(
                         $aprend,
                         "cnpjEntQual",
-                        $this->std->altcontratual->vinculo->inforegimetrab->infoceletista->aprend->cnpjEntQual,
+                        $this->std->altcontratual->vinculo->inforegimetrab->infoceletista->aprend->cnpjentqual,
                         true
                     );
                 }
@@ -1460,12 +1460,12 @@ trait TraitS2206
                     );
                 }
                 
-                if (isset($this->std->altcontratual->vinculo->inforegimetrab->infoceletista->aprend->cnpjPrat)
-                    && !empty($this->std->altcontratual->vinculo->inforegimetrab->infoceletista->aprend->cnpjPrat)) {
+                if (isset($this->std->altcontratual->vinculo->inforegimetrab->infoceletista->aprend->cnpjprat)
+                    && !empty($this->std->altcontratual->vinculo->inforegimetrab->infoceletista->aprend->cnpjprat)) {
                     $this->dom->addChild(
                         $aprend,
                         "cnpjPrat",
-                        $this->std->altcontratual->vinculo->inforegimetrab->infoceletista->aprend->cnpjPrat,
+                        $this->std->altcontratual->vinculo->inforegimetrab->infoceletista->aprend->cnpjprat,
                         true
                     );
                 }
