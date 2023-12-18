@@ -579,8 +579,8 @@ trait TraitS2500
                 );
                 $this->dom->addChild(
                     $informacoesValores,
-                    "repercProc",
-                    $info->ideestab->infovlr->repercproc,
+                    "indReperc",
+                    $info->ideestab->infovlr->indreperc,
                     true
                 );
                 $this->dom->addChild(
