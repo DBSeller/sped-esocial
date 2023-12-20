@@ -3265,7 +3265,30 @@ trait TraitS2300
             }
             $infoComplementares->appendChild($infoEstagiario);
         }
-
+        //localTrabGeral (opcional)
+        if (isset($this->std->infotsvinicio->infocomplementares->localtrabgeral)) {
+            $localgeral = $this->dom->createElement("localTrabGeral");
+            $this->dom->addChild(
+                $localgeral,
+                "tpInsc",
+                $this->std->infotsvinicio->infocomplementares->localtrabgeral->tpinsc,
+                true
+            );
+            $this->dom->addChild(
+                $localgeral,
+                "nrInsc",
+                $this->std->infotsvinicio->infocomplementares->localtrabgeral->nrinsc,
+                true
+            );
+            $this->dom->addChild(
+                $localgeral,
+                "descComp",
+                !empty($this->std->infotsvinicio->infocomplementares->localtrabgeral->desccomp) ?
+                $this->std->infotsvinicio->infocomplementares->localtrabgeral->desccomp : null,
+                false
+            );
+            $infoComplementares->appendChild($localgeral);
+        }
         if (!empty($infoComplementares)) {
             $infoTSVInicio->appendChild($infoComplementares);
         }
