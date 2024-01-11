@@ -1293,7 +1293,7 @@ trait TraitS2206
     /**
      * builder for version S.1.2.0
      */
-    protected function toNodeS110()
+    protected function toNodeS120()
     {
         $ideEmpregador = $this->node->getElementsByTagName('ideEmpregador')->item(0);
         $ideEvento = $this->dom->createElement("ideEvento");
