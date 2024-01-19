@@ -158,4 +158,11 @@ trait TraitS5013
         throw new \Exception("TODO !!");
     }
 
+    /**
+     * builder for version S.1.2.0
+     */
+    protected function toNodeS120()
+    {
+        throw new \Exception("TODO !!");
+    }
 }
