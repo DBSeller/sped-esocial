@@ -1167,81 +1167,90 @@ trait TraitS1202
                 true
             );
 
-            if (!empty($dm->inforra)) {
-                $inforra = $this->dom->createElement("infoRRA");
+            if (isset($dm->indrra) && !empty($dm->indrra)) {
                 $this->dom->addChild(
-                    $inforra,
-                    "tpProcRRA",
-                    $dm->inforra->tpprocrra,
+                    $dmdev,
+                    "indRRA",
+                    $dm->indrra,
                     true
                 );
-                $this->dom->addChild(
-                    $inforra,
-                    "nrProcRRA",
-                    $dm->inforra->nrprocrra,
-                    true
-                );
-                $this->dom->addChild(
-                    $inforra,
-                    "descRRA",
-                    $dm->inforra->descrra,
-                    true
-                );
-
-                $this->dom->addChild(
-                    $inforra,
-                    "qtdMesesRRA",
-                    $dm->inforra->qtdmesesrra,
-                    true
-                );
-
-                if (isset($dm->inforra->despprocjud) && !empty($dm->inforra->despprocjud)) {
-                    $despprocjud = $this->dom->createElement("despProcJud");
+            
+                if (!empty($dm->inforra)) {
+                    $inforra = $this->dom->createElement("infoRRA");
                     $this->dom->addChild(
-                        $despprocjud,
-                        "vlrDespCustas",
-                        $dm->inforra->despprocjud->vlrdespcustas,
+                        $inforra,
+                        "tpProcRRA",
+                        $dm->inforra->tpprocrra,
+                        true
+                    );
+                    $this->dom->addChild(
+                        $inforra,
+                        "nrProcRRA",
+                        $dm->inforra->nrprocrra,
+                        true
+                    );
+                    $this->dom->addChild(
+                        $inforra,
+                        "descRRA",
+                        $dm->inforra->descrra,
                         true
                     );
 
                     $this->dom->addChild(
-                        $despprocjud,
-                        "vlrDespAdvogados",
-                        $dm->inforra->despprocjud->vlrdespadvogados,
+                        $inforra,
+                        "qtdMesesRRA",
+                        $dm->inforra->qtdmesesrra,
                         true
                     );
-                    $inforra->appendChild($despprocjud);
-                }
-                $dmdev->appendChild($inforra);
 
-                if (isset($dm->inforra->ideadv) && !empty($dm->inforra->ideadv)) {
-                    $ideadv = $this->dom->createElement("ideAdv");
-                    foreach ($dm->inforra->ideadv as $adv) {
+                    if (isset($dm->inforra->despprocjud) && !empty($dm->inforra->despprocjud)) {
+                        $despprocjud = $this->dom->createElement("despProcJud");
                         $this->dom->addChild(
-                            $ideadv,
-                            "tpInsc",
-                            $adv->tpinsc,
-                            true
-                        );
-    
-                        $this->dom->addChild(
-                            $ideadv,
-                            "nrInsc",
-                            $adv->nrinsc,
-                            true
-                        );
-    
-                        $this->dom->addChild(
-                            $ideadv,
-                            "vlrAdv",
-                            $adv->vlradv,
+                            $despprocjud,
+                            "vlrDespCustas",
+                            $dm->inforra->despprocjud->vlrdespcustas,
                             true
                         );
 
+                        $this->dom->addChild(
+                            $despprocjud,
+                            "vlrDespAdvogados",
+                            $dm->inforra->despprocjud->vlrdespadvogados,
+                            true
+                        );
+                        $inforra->appendChild($despprocjud);
                     }
-                    $inforra->appendChild($ideadv);
+                    $dmdev->appendChild($inforra);
+
+                    if (isset($dm->inforra->ideadv) && !empty($dm->inforra->ideadv)) {
+                        $ideadv = $this->dom->createElement("ideAdv");
+                        foreach ($dm->inforra->ideadv as $adv) {
+                            $this->dom->addChild(
+                                $ideadv,
+                                "tpInsc",
+                                $adv->tpinsc,
+                                true
+                            );
+        
+                            $this->dom->addChild(
+                                $ideadv,
+                                "nrInsc",
+                                $adv->nrinsc,
+                                true
+                            );
+        
+                            $this->dom->addChild(
+                                $ideadv,
+                                "vlrAdv",
+                                $adv->vlradv,
+                                true
+                            );
+
+                        }
+                        $inforra->appendChild($ideadv);
+                    }
+                    
                 }
-                
             }
             if (!empty($dm->infoperapur)) {
                 $perapur = $this->dom->createElement("infoPerApur");
