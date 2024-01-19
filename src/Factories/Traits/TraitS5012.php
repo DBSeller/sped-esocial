@@ -76,4 +76,12 @@ trait TraitS5012
     {
         throw new \Exception("NÃO EXISTE EVENTO {$this->evtAlias} na versão S_1.1 !!");
     }
+
+    /**
+     * builder for version S.1.2.0
+     */
+    protected function toNodeS120()
+    {
+        throw new \Exception("NÃO EXISTE EVENTO {$this->evtAlias} na versão S_1.2 !!");
+    }
 }
