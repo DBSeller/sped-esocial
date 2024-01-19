@@ -1692,7 +1692,7 @@ trait TraitS2299
         $this->sign($this->eSocial);
     }
 
-        /**
+    /**
      * builder for version S.1.2.0
      */
     protected function toNodeS120()
