@@ -11,7 +11,7 @@ trait TraitS1210
     {
         $ideEmpregador = $this->node->getElementsByTagName('ideEmpregador')->item(0);
         //o idEvento pode variar de evento para evento
-        //então cada factory individualmente terá de construir o seu
+        //entÃ£o cada factory individualmente terÃ¡ de construir o seu
         $ideEvento = $this->dom->createElement("ideEvento");
         $this->dom->addChild(
             $ideEvento,
@@ -580,7 +580,7 @@ trait TraitS1210
             $infoPgto = null;
         }
         $this->node->appendChild($ideBenef);
-        //finalização do xml
+        //finalizaÃ§Ã£o do xml
         $this->eSocial->appendChild($this->node);
         //$this->xml = $this->dom->saveXML($this->eSocial);
         $this->sign();
@@ -593,7 +593,7 @@ trait TraitS1210
     {
         $ideEmpregador = $this->node->getElementsByTagName('ideEmpregador')->item(0);
         //o idEvento pode variar de evento para evento
-        //então cada factory individualmente terá de construir o seu
+        //entÃ£o cada factory individualmente terÃ¡ de construir o seu
         $ideEvento = $this->dom->createElement("ideEvento");
         $this->dom->addChild(
             $ideEvento,
@@ -678,7 +678,7 @@ trait TraitS1210
             $infoPgto = null;
         }
         $this->node->appendChild($ideBenef);
-        //finalização do xml
+        //finalizaÃ§Ã£o do xml
         $this->eSocial->appendChild($this->node);
         //$this->xml = $this->dom->saveXML($this->eSocial);
         $this->sign();
@@ -692,7 +692,7 @@ trait TraitS1210
     {
         $ideEmpregador = $this->node->getElementsByTagName('ideEmpregador')->item(0);
         //o idEvento pode variar de evento para evento
-        //então cada factory individualmente terá de construir o seu
+        //entÃ£o cada factory individualmente terÃ¡ de construir o seu
         $ideEvento = $this->dom->createElement("ideEvento");
         $this->dom->addChild(
             $ideEvento,
@@ -777,7 +777,7 @@ trait TraitS1210
             $infoPgto = null;
         }
         $this->node->appendChild($ideBenef);
-        //finalização do xml
+        //finalizaÃ§Ã£o do xml
         $this->eSocial->appendChild($this->node);
         //$this->xml = $this->dom->saveXML($this->eSocial);
         $this->sign();
@@ -790,7 +790,7 @@ trait TraitS1210
     {
         $ideEmpregador = $this->node->getElementsByTagName('ideEmpregador')->item(0);
         //o idEvento pode variar de evento para evento
-        //então cada factory individualmente terá de construir o seu
+        //entÃ£o cada factory individualmente terÃ¡ de construir o seu
         $ideEvento = $this->dom->createElement("ideEvento");
         $this->dom->addChild(
             $ideEvento,
@@ -947,7 +947,7 @@ trait TraitS1210
                         $ircr->tpcr,
                         true
                     );
-                    if (isset($ircr->deddepen) && !empty($ircr->dedepen)) {
+                    if (isset($ircr->deddepen) && !empty($ircr->deddepen)) {
                         foreach ($ircr->deddepen as $dedDepen) {
                             $infoDedDepen = $this->dom->createElement("dedDepen");
 
@@ -1353,10 +1353,12 @@ trait TraitS1210
         }
         $this->node->appendChild($ideBenef);
 
-        //finalização do xml
+        //finalizaÃ§Ã£o do xml
         $this->eSocial->appendChild($this->node);
         //$this->xml = $this->dom->saveXML($this->eSocial);
         $this->sign();
+                // var_dump($this->xml);
+        // die();
 
 
     }
