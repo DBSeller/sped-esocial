@@ -3,8 +3,8 @@
     "type": "object",
     "properties": {
         "sequencial": {
-            "required": true,
-            "type": "integer",
+            "required": false,
+            "type": ["integer","null"],
             "minimum": 1,
             "maximum": 99999
         },
@@ -27,7 +27,7 @@
                     "type": ["string","null"],
                     "$ref": "#/definitions/periodo"
                 }
-            }    
+            }
         },
         "infocadastro": {
             "required": false,
@@ -54,7 +54,7 @@
                     "required": true,
                     "type": "integer",
                     "minimum": 0,
-                    "maximum": 1
+                    "maximum": 2
                 },
                 "indopccp": {
                     "required": false,
@@ -76,7 +76,7 @@
                 "cnpjefr": {
                     "required": false,
                     "type": ["string","null"],
-                    "pattern": "^[0-9]{14}"
+                    "pattern": "^[0-9]{14}$"
                 },
                 "dttrans11096": {
                     "required": false,
@@ -86,7 +86,7 @@
                 "indtribfolhapiscofins": {
                     "required": false,
                     "type": ["string","null"],
-                    "pattern": "S"
+                    "pattern": "^(S)$"
                 }
             }
         },
@@ -161,7 +161,7 @@
                     "required": false,
                     "type": ["string","null"],
                     "$ref": "#/definitions/periodo"
-                }            
+                }
             }
         }
     }
