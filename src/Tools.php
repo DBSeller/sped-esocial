@@ -262,8 +262,12 @@ class Tools extends ToolsBase
      * @return string
      * @throws InvalidArgumentException
      */
-    public function consultarEventosTabela($tpEvt, $chEvt = null, $dtIni = null, $dtFim = null)
+    public function consultarEventosTabela($tpEvt, $chEvt = null, $dtIni = null, $dtFim = null, $nomeArquivo = "", $dir = "")
     {
+        $folder = 'consulta';
+        if (!empty($dir)) {
+            $folder .= DIRECTORY_SEPARATOR . $dir;
+        }
         $operationVersion = $this->serviceXsd['ConsultaIdentificadoresEventosTabela']['version'];
         if (empty($operationVersion)) {
             throw new \InvalidArgumentException(
@@ -320,7 +324,11 @@ class Tools extends ToolsBase
             ."</v1:{$this->method}>";
             
         $this->lastRequest  = $body;
-        $this->lastResponse = $this->sendRequest($body);
+        if (!empty($nomeArquivo)) {
+            $this->lastResponse = $this->sendRequest($body, $nomeArquivo, 'downloads', $folder);
+        } else {
+            $this->lastResponse = $this->sendRequest($body);
+        }
         return $this->lastResponse;
     }
     
@@ -332,8 +340,12 @@ class Tools extends ToolsBase
      * @return string
      * @throws InvalidArgumentException
      */
-    public function consultarEventosTrabalhador($cpfTrab, $dtIni, $dtFim)
+    public function consultarEventosTrabalhador($cpfTrab, $dtIni, $dtFim, $nomeArquivo = "", $dir = "")
     {
+        $folder = 'consulta';
+        if (!empty($dir)) {
+            $folder .= DIRECTORY_SEPARATOR . $dir;
+        }
         $operationVersion = $this->serviceXsd['ConsultaIdentificadoresEventosTrabalhador']['version'];
         if (empty($operationVersion)) {
             throw new \InvalidArgumentException(
@@ -388,7 +400,11 @@ class Tools extends ToolsBase
             ."</v1:{$this->method}>";
             
         $this->lastRequest  = $body;
-        $this->lastResponse = $this->sendRequest($body);
+        if (!empty($nomeArquivo)) {
+            $this->lastResponse = $this->sendRequest($body, $nomeArquivo, 'downloads', $folder);
+        } else {
+            $this->lastResponse = $this->sendRequest($body);
+        }
         return $this->lastResponse;
     }
     
@@ -398,8 +414,12 @@ class Tools extends ToolsBase
      * @return string
      * @throws InvalidArgumentException
      */
-    public function downloadEventosPorId($ids)
+    public function downloadEventosPorId($ids, $nomeArquivo = '', $dir = '')
     {
+        $folder = 'consultaid';
+        if (!empty($dir)) {
+            $folder .= DIRECTORY_SEPARATOR . $dir;
+        }
         $operationVersion = $this->serviceXsd['SolicitacaoDownloadEventosPorId']['version'];
         if (empty($operationVersion)) {
             throw new \InvalidArgumentException(
@@ -454,7 +474,11 @@ class Tools extends ToolsBase
             ."</v1:{$this->method}>";
             
         $this->lastRequest  = $body;
-        $this->lastResponse = $this->sendRequest($body);
+        if (!empty($nomeArquivo)) {
+            $this->lastResponse = $this->sendRequest($body, $nomeArquivo, 'downloads', $folder);
+        } else {
+            $this->lastResponse = $this->sendRequest($body);
+        }
         return $this->lastResponse;
     }
     
@@ -531,8 +555,16 @@ class Tools extends ToolsBase
      * @param string $request
      * @return string
      */
-    protected function sendRequest($request)
+    protected function sendRequest($request, $nomeArquivo = '', $tipo = 'envios', $subtipo = '')
     {
+        $path = 'storage' . DIRECTORY_SEPARATOR . $tipo . DIRECTORY_SEPARATOR . date('Y') . DIRECTORY_SEPARATOR . date('m') . DIRECTORY_SEPARATOR;
+        if (!empty($subtipo)) {
+            $path .= DIRECTORY_SEPARATOR . $subtipo . DIRECTORY_SEPARATOR;
+        }
+        if (!is_dir($path)) {
+            mkdir($path, 0755, true);
+        }
+
         if (empty($this->soap)) {
             $this->soap = new SoapCurl($this->certificate);
         }
@@ -556,6 +588,9 @@ class Tools extends ToolsBase
         // Versão do SOAP esperada é a 1.1, conforme manual do desenvolvedor eSocial versão 1.1:
         // "Alteração da versão do SOAP de 1.2 para 1.1."
         // http://portal.esocial.gov.br/institucional/manuais/manualorientacaodesenvolvedoresocialv1-7.pdf
+        if (!empty($nomeArquivo)) {
+            file_put_contents($path . $nomeArquivo, print_r($envelope, true));
+        }
         return (string) $this->soap->send(
             $this->method,
             $this->uri,
@@ -585,10 +620,6 @@ class Tools extends ToolsBase
             );
         }
 
-        $path = 'storage' . DIRECTORY_SEPARATOR . 'envios' . DIRECTORY_SEPARATOR . date('Y') . DIRECTORY_SEPARATOR . date('m') . DIRECTORY_SEPARATOR;
-        if (!is_dir($path)) {
-            mkdir($path, 0755, true);
-        }
         $nomeEvento = 'SXXXX';
 
         foreach ($eventos as $evt) {
@@ -734,7 +765,6 @@ class Tools extends ToolsBase
         //validar a requisição conforme o seu respectivo XSD
         $date = new \DateTime();
         $nomeArquivo = date("d-m-Y") . "-" . $nomeEvento . "-" . date("his") . "-". $date->getTimestamp() . "-" . md5(uniqid(rand(), true)) . ".xml";
-        file_put_contents($path . $nomeArquivo, print_r($request, true));
         
         Validator::isValid(
             $request,
@@ -750,7 +780,7 @@ class Tools extends ToolsBase
             . "</v1:EnviarLoteEventos>";
 
         $this->lastRequest = $body;
-        $this->lastResponse = $this->sendRequest($body);
+        $this->lastResponse = $this->sendRequest($body, $nomeArquivo);
         return $this->lastResponse;
     }
 
