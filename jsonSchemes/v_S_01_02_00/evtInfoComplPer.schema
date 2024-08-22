@@ -1,6 +1,6 @@
 {
     "title": "evtInfoComplPer",
-    "type": "object",
+    "type": "array",
     "properties": {
         "sequencial": {
             "required": true,
