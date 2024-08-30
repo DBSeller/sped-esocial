@@ -225,7 +225,7 @@ trait TraitS1280
                 $infoSubstPatrOpPort = $this->dom->createElement("infoSubstPatrOpPort");
                 $this->dom->addChild(
                     $infoSubstPatrOpPort,
-                    "cnpjOpPortuario",
+                    "codLotacao",
                     $info->codlotacao,
                     true
                 );
