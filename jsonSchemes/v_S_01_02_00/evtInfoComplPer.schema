@@ -1,6 +1,6 @@
 {
     "title": "evtInfoComplPer",
-    "type": "object",
+    "type": "array",
     "properties": {
         "sequencial": {
             "required": true,
@@ -38,7 +38,7 @@
                     "required": true,
                     "type": "integer",
                     "minimum": 1,
-                    "maximum": 2
+                    "maximum": 1
                 },
                 "percpedcontrib": {
                      "required": true,
@@ -54,10 +54,11 @@
             "items": {
                 "type": "object",
                 "properties": {
-                    "cnpjopportuario": {
+                    "codlotacao": {
                         "required": true,
                         "type": "string",
-                        "pattern": "^[0-9]{14}$"
+                        "minlength": 1,
+                        "maxlength":30
                     }
                 }
             }
@@ -73,6 +74,18 @@
                 "fator13": {
                      "required": true,
                      "type": "number"
+                }
+            }
+        },
+        "infoperctransf11096": {
+            "required": false,
+            "type": "object",
+            "properties": {
+                "perctransf": {
+                    "required": true,
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
                 }
             }
         }
