@@ -44,7 +44,7 @@ trait TraitS2221
             true
         );
         $this->node->insertBefore($ideEvento, $ideEmpregador);
-        
+
         $ideVinculo = $this->dom->createElement("ideVinculo");
         $ide = $this->std->idevinculo;
         $this->dom->addChild(
@@ -72,7 +72,7 @@ trait TraitS2221
             false
         );
         $this->node->appendChild($ideVinculo);
-        
+
         $toxic = $this->dom->createElement("toxicologico");
         $tox = $this->std->toxicologico;
         $this->dom->addChild(
@@ -123,7 +123,7 @@ trait TraitS2221
         //$this->xml = $this->dom->saveXML($this->eSocial);
         $this->sign();
     }
-    
+
     /**
      * builder for version S.1.0.0
      */
@@ -138,5 +138,104 @@ trait TraitS2221
     protected function toNodeS110()
     {
         throw new \Exception("NÃO EXISTE EVENTO {$this->evtAlias} na versão S_1.1 !!");
+    }
+
+    protected function toNodeS130()
+    {
+        $ideEmpregador = $this->node->getElementsByTagName('ideEmpregador')->item(0);
+        //o idEvento pode variar de evento para evento
+        //então cada factory individualmente terá de construir o seu
+        $ideEvento = $this->dom->createElement("ideEvento");
+        $this->dom->addChild(
+            $ideEvento,
+            "indRetif",
+            $this->std->indretif,
+            true
+        );
+        $this->dom->addChild(
+            $ideEvento,
+            "nrRecibo",
+            !empty($this->std->nrrecibo) ? $this->std->nrrecibo : null,
+            false
+        );
+        $this->dom->addChild(
+            $ideEvento,
+            "tpAmb",
+            $this->tpAmb,
+            true
+        );
+        $this->dom->addChild(
+            $ideEvento,
+            "procEmi",
+            $this->procEmi,
+            true
+        );
+        $this->dom->addChild(
+            $ideEvento,
+            "verProc",
+            $this->verProc,
+            true
+        );
+        $this->node->insertBefore($ideEvento, $ideEmpregador);
+
+        $ideVinculo = $this->dom->createElement("ideVinculo");
+        $ide = $this->std->idevinculo;
+        $this->dom->addChild(
+            $ideVinculo,
+            "cpfTrab",
+            $ide->cpftrab,
+            true
+        );
+        $this->dom->addChild(
+            $ideVinculo,
+            "matricula",
+            $ide->matricula,
+            true
+        );
+        $this->node->appendChild($ideVinculo);
+
+        $toxic = $this->dom->createElement("toxicologico");
+        $tox = $this->std->toxicologico;
+        $this->dom->addChild(
+            $toxic,
+            "dtExame",
+            $tox->dtexame,
+            true
+        );
+        $this->dom->addChild(
+            $toxic,
+            "cnpjLab",
+            $tox->cnpjlab,
+            true
+        );
+        $this->dom->addChild(
+            $toxic,
+            "codSeqExame",
+            $tox->codseqexame,
+            true
+        );
+        $this->dom->addChild(
+            $toxic,
+            "nmMed",
+            $tox->nmmed,
+            true
+        );
+        $this->dom->addChild(
+            $toxic,
+            "nrCRM",
+            !empty($tox->nrcrm) ? $tox->nrcrm : null,
+            false
+        );
+        $this->dom->addChild(
+            $toxic,
+            "ufCRM",
+            !empty($tox->ufcrm) ? $tox->ufcrm : null,
+            false
+        );
+        $this->node->appendChild($toxic);
+        //finalização do xml
+        $this->eSocial->appendChild($this->node);
+        //$this->xml = $this->dom->saveXML($this->eSocial);
+        $this->sign();
     }
 }
