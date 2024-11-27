@@ -225,7 +225,7 @@ trait TraitS1010
         //$this->xml = $this->dom->saveXML($this->eSocial);
         $this->sign();
     }
-    
+
     /**
      * builder for version S.1.0.0
      */
@@ -886,7 +886,7 @@ trait TraitS1010
         $this->sign();
     }
 
-         /**
+    /**
      * builder for version S.1.3.0
      */
     protected function toNodeS130()
@@ -1000,7 +1000,7 @@ trait TraitS1010
                     : null,
                 false
             );
-            $this->dom->addChild(
+	    $this->dom->addChild(
                 $dadosRubrica,
                 "codIncPisPasep",
                 !empty($this->std->dadosrubrica->codincpispasep)
@@ -1024,7 +1024,6 @@ trait TraitS1010
                     : null,
                 false
             );
-
             if (! empty($this->std->dadosrubrica->ideprocessocp)) {
                 foreach ($this->std->dadosrubrica->ideprocessocp as $cp) {
                     $ideProcessoCP = $this->dom->createElement("ideProcessoCP");
@@ -1055,7 +1054,6 @@ trait TraitS1010
                     $dadosRubrica->appendChild($ideProcessoCP);
                 }
             }
-
             if (! empty($this->std->dadosrubrica->ideprocessoirrf)) {
                 foreach ($this->std->dadosrubrica->ideprocessoirrf as $irrf) {
                     $ideProcessoIRRF = $this->dom->createElement("ideProcessoIRRF");
@@ -1084,6 +1082,25 @@ trait TraitS1010
                         true
                     );
                     $dadosRubrica->appendChild($ideProcessoFGTS);
+                }
+            }
+
+            if (! empty($this->std->dadosrubrica->ideprocessopispasep)) {
+                foreach ($this->std->dadosrubrica->ideprocessopispasep as $pispasep) {
+                    $ideProcessoPisPasep = $this->dom->createElement("ideProcessoPisPasep");
+                    $this->dom->addChild(
+                        $ideProcessoPisPasep,
+                        "nrProc",
+                        $pispasep->nrproc,
+                        true
+                    );
+                    $this->dom->addChild(
+                        $ideProcessoPisPasep,
+                        "codSusp",
+                        $pispasep->codsusp,
+                        true
+                    );
+                    $dadosRubrica->appendChild($ideProcessoPisPasep);
                 }
             }
             $node->appendChild($dadosRubrica);
