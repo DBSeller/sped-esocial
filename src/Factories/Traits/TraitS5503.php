@@ -44,4 +44,30 @@ trait TraitS5503
         $this->xml = $this->dom->saveXML($this->eSocial);
         $this->sign();
     }
+
+
+    /**
+     * builder for version S.1.3.0
+     */
+    protected function toNodeS130()
+    {
+        $ideEmpregador = $this->node->getElementsByTagName('ideEmpregador')->item(0);
+        $ideEvento = $this->dom->createElement("ideEvento");
+        $this->dom->addChild(
+            $ideEvento,
+            "nrRecArqBase",
+            $this->std->nrrecarqbase,
+            true
+        );
+        $this->dom->addChild(
+            $ideEvento,
+            "perApur",
+            $this->std->perapur,
+            true
+        );
+        $this->node->insertBefore($ideEvento, $ideEmpregador);
+        $this->eSocial->appendChild($this->node);
+        $this->xml = $this->dom->saveXML($this->eSocial);
+        $this->sign();
+    }
 }
