@@ -1363,4 +1363,584 @@ trait TraitS1210
 
     }
 
+    /**
+     * builder for version S.1.3.0
+     */
+    protected function toNodeS130()
+    {
+        $ideEmpregador = $this->node->getElementsByTagName('ideEmpregador')->item(0);
+        //o idEvento pode variar de evento para evento
+        //entÃ£o cada factory individualmente terÃ¡ de construir o seu
+        $ideEvento = $this->dom->createElement("ideEvento");
+        $this->dom->addChild(
+            $ideEvento,
+            "indRetif",
+            $this->std->indretif,
+            true
+        );
+        $this->dom->addChild(
+            $ideEvento,
+            "nrRecibo",
+            ! empty($this->std->nrrecibo) ? $this->std->nrrecibo : null,
+            false
+        );
+        $this->dom->addChild(
+            $ideEvento,
+            "perApur",
+            $this->std->perapur,
+            true
+        );
+        $this->dom->addChild(
+            $ideEvento,
+            "tpAmb",
+            $this->tpAmb,
+            true
+        );
+        $this->dom->addChild(
+            $ideEvento,
+            "procEmi",
+            $this->procEmi,
+            true
+        );
+        $this->dom->addChild(
+            $ideEvento,
+            "verProc",
+            $this->verProc,
+            true
+        );
+        $this->node->insertBefore($ideEvento, $ideEmpregador);
+
+        $ideBenef = $this->dom->createElement("ideBenef");
+        $this->dom->addChild(
+            $ideBenef,
+            "cpfBenef",
+            $this->std->idebenef->cpfbenef,
+            true
+        );
+
+        foreach ($this->std->idebenef->infopgto as $pgto) {
+            $infoPgto = $this->dom->createElement("infoPgto");
+            $this->dom->addChild(
+                $infoPgto,
+                "dtPgto",
+                $pgto->dtpgto,
+                true
+            );
+            $this->dom->addChild(
+                $infoPgto,
+                "tpPgto",
+                $pgto->tppgto,
+                true
+            );
+            $this->dom->addChild(
+                $infoPgto,
+                "perRef",
+                !empty($pgto->perref) ? $pgto->perref : null,
+                false
+            );
+            $this->dom->addChild(
+                $infoPgto,
+                "ideDmDev",
+                $pgto->idedmdev,
+                true
+            );
+            $this->dom->addChild(
+                $infoPgto,
+                "vrLiq",
+                $pgto->vrliq,
+                true
+            );
+
+            $ideBenef->appendChild($infoPgto);
+            $infoPgto = null;
+        }
+        if (isset($this->std->idebenef->infoircomplem)) {
+            $infoIrComplem = $this->dom->createElement("infoIRComplem");
+
+                $this->dom->addChild(
+                    $infoIrComplem,
+                    "dtLaudo",
+                    !empty($this->std->idebenef->infoircomplem->dtlaudo) ?
+                     $this->std->idebenef->infoircomplem->dtlaudo : null,
+                    false
+                );
+            if (isset($this->std->idebenef->infoircomplem->infodep)
+            && !empty($this->std->idebenef->infoircomplem->infodep)) {
+                foreach ($this->std->idebenef->infoircomplem->infodep as $dep) {
+
+                    $infoDep = $this->dom->createElement("infoDep");
+
+                    $this->dom->addChild(
+                        $infoDep,
+                        'cpfDep',
+                        $dep->cpfdep,
+                        true
+                    );
+
+                    $this->dom->addChild(
+                        $infoDep,
+                        'dtNascto',
+                        !empty($dep->dtnascto) ? $dep->dtnascto : null,
+                        false
+                    );
+
+                    $this->dom->addChild(
+                        $infoDep,
+                        'nome',
+                        !empty($dep->nome) ? $dep->nome : null,
+                        false
+                    );
+
+                    $this->dom->addChild(
+                        $infoDep,
+                        'depIRRF',
+                        !empty($dep->depirrf) ? $dep->depirrf : null,
+                        false
+                    );
+
+                    $this->dom->addChild(
+                        $infoDep,
+                        'tpDep',
+                        !empty($dep->tpdep) ? $dep->tpdep : null,
+                        false
+                    );
+
+                    $this->dom->addChild(
+                        $infoDep,
+                        'descrDep',
+                        !empty($dep->descrdep) ? $dep->descrdep : null,
+                        false
+                    );
+
+                    $infoIrComplem->appendChild($infoDep);
+                    $infoDep = null;
+                }
+            }
+
+            if (isset($this->std->idebenef->infoircomplem->infoircr)
+            && !empty($this->std->idebenef->infoircomplem->infoircr)) {
+                foreach ($this->std->idebenef->infoircomplem->infoircr as $ircr) {
+                    $infoIrcr = $this->dom->createElement("infoIRCR");
+                    $this->dom->addChild(
+                        $infoIrcr,
+                        'tpCR',
+                        $ircr->tpcr,
+                        true
+                    );
+                    if (isset($ircr->deddepen) && !empty($ircr->deddepen)) {
+                        foreach ($ircr->deddepen as $dedDepen) {
+                            $infoDedDepen = $this->dom->createElement("dedDepen");
+
+                            $this->dom->addChild(
+                                $infoDedDepen,
+                                'tpRend',
+                                $dedDepen->tprend,
+                                true
+                            );
+
+                            $this->dom->addChild(
+                                $infoDedDepen,
+                                'cpfDep',
+                                $dedDepen->cpfdep,
+                                true
+                            );
+
+                            $this->dom->addChild(
+                                $infoDedDepen,
+                                'vlrDedDep',
+                                $dedDepen->vlrdeddep,
+                                true
+                            );
+
+                            $infoIrcr->appendChild($infoDedDepen);
+                            $infoDedDepen = null;
+                        }
+                    }
+                    if (isset($ircr->penalim) && !empty($ircr->penalim)) {
+
+                        foreach ($ircr->penalim as $penAlim) {
+                            $infoPenAlim = $this->dom->createElement("penAlim");
+
+                            $this->dom->addChild(
+                                $infoPenAlim,
+                                'tpRend',
+                                $penAlim->tprend,
+                                true
+                            );
+
+                            $this->dom->addChild(
+                                $infoPenAlim,
+                                'cpfDep',
+                                $penAlim->cpfdep,
+                                true
+                            );
+
+                            $this->dom->addChild(
+                                $infoPenAlim,
+                                'vlrDedPenAlim',
+                                $penAlim->vlrdedpenalim,
+                                true
+                            );
+                            $infoIrcr->appendChild($infoPenAlim);
+                            $infoPenAlim = null;
+                        }
+                    }
+                    if ( isset($ircr->previdcompl) && !empty($ircr->previdcompl)){
+                        foreach ($ircr->previdcompl as $previdCompl) {
+                            $infoPrevid = $this->dom->createElement("previdCompl");
+
+                            $this->dom->addChild(
+                                $infoPrevid,
+                                'tpPrev',
+                                $previdCompl->tpprev,
+                                true
+                            );
+
+                            $this->dom->addChild(
+                                $infoPrevid,
+                                'cnpjEntidPC',
+                                $previdCompl->cnpjentidpc,
+                                true
+                            );
+
+                            $this->dom->addChild(
+                                $infoPrevid,
+                                'vlrDedPC',
+                                $previdCompl->vlrdedpc,
+                                true
+                            );
+
+                            $this->dom->addChild(
+                                $infoPrevid,
+                                'vlrPatrocFunp',
+                                !empty($previdCompl->vlrpatrocfunp) ? $previdCompl->vlrpatrocfunp : null,
+                                false
+                            );
+                            $infoIrcr->appendChild($infoPrevid);
+                            $infoPrevid = null;
+                        }
+                    }
+                    if (isset($ircr->infoprocret) && !empty($ircr->infoprocret)) {
+
+                        foreach ($ircr->infoprocret as $procret) {
+                            $infoProcRet = $this->dom->createElement("infoProcRet");
+
+                            $this->dom->addChild(
+                                $infoProcRet,
+                                'tpProcRet',
+                                $procret->tpprocret,
+                                true
+                            );
+
+                            $this->dom->addChild(
+                                $infoProcRet,
+                                'nrProcRet',
+                                $procret->nrprocret,
+                                true
+                            );
+
+                            $this->dom->addChild(
+                                $infoProcRet,
+                                'codSusp',
+                                !empty($procret->codsusp) ? $procret->codsusp : null,
+                                false
+                            );
+                            if (isset($procret->infovalores) && !empty($procret->infovalores)) {
+                                foreach ($procret->infovalores as $valores) {
+                                    $infoValores = $this->dom->createElement("infoValores");
+                                    $this->dom->addChild(
+                                        $infoValores,
+                                        'indApuracao',
+                                        $valores->indapuracao,
+                                        true
+                                    );
+
+                                    $this->dom->addChild(
+                                        $infoValores,
+                                        'vlrNRetido',
+                                        !empty($valores->vlrnretido) ? $valores->vlrnretido : null,
+                                        false
+                                    );
+
+                                    $this->dom->addChild(
+                                        $infoValores,
+                                        'vlrDepJud',
+                                        !empty($valores->vlrdepjud) ? $valores->vlrdepjud : null,
+                                        false
+                                    );
+
+                                    $this->dom ->addChild(
+                                        $infoValores,
+                                        'vlrCmpAnoCal',
+                                        !empty($valores->vlrcmpanocal) ? $valores->vlrcmpanocal : null,
+                                        false
+                                    );
+
+                                    $this->dom->addChild(
+                                        $infoValores,
+                                        'vlrCmpAnoAnt',
+                                        !empty($valores->vlrcmpanoant) ? $valores->vlrcmpanoant : null,
+                                        false
+                                    );
+
+                                    $this->dom->addChild(
+                                        $infoValores,
+                                        'vlrRendSusp',
+                                        !empty($valores->vlrrendsusp) ? $valores->vlrrendsusp : null,
+                                        false
+                                    );
+                                    if (isset($valores->dedsusp) && !empty($valores->dedsusp)) {
+
+                                        foreach ($valores->dedsusp as $dedSusp) {
+                                            $infoDedSusp = $this->dom->createElement("dedSusp");
+
+                                            $this->dom->addChild(
+                                                $infoDedSusp,
+                                                'indTpDeducao',
+                                                $dedSusp->indtpdeducao,
+                                                true
+                                            );
+
+                                            $this->dom->addChild(
+                                                $infoDedSusp,
+                                                'vlrDedSusp',
+                                                !empty($dedSusp->vlrdedsusp) ? $dedSusp->vlrdedsusp : null,
+                                                false
+                                            );
+
+                                            $this->dom->addChild(
+                                                $infoDedSusp,
+                                                'cnpjEntidPC',
+                                                !empty($dedSusp->cnpjentidpc) ? $dedSusp->cnpjentidpc : null,
+                                                false
+                                            );
+
+                                            $this->dom->addChild(
+                                                $infoDedSusp,
+                                                'vlrPatrocFunp',
+                                                !empty($dedSusp->vlrpatrocfunp)
+                                                    ? $dedSusp->vlrpatrocfunp : null,
+                                                false
+                                            );
+                                            if (isset($dedSusp->benefpen) &&
+                                            !empty($dedSusp->benefpen)) {
+
+
+                                                foreach ($dedSusp->benefpen as $benefPen) {
+                                                    $infoBenefPen = $this->dom->createElement("benefPen");
+
+                                                    $this->dom->addChild(
+                                                        $infoBenefPen,
+                                                        'cpfDep',
+                                                        $benefPen->cpfdep,
+                                                        true
+                                                    );
+
+                                                    $this->dom->addChild(
+                                                        $infoBenefPen,
+                                                        'vlrDepenSusp',
+                                                        $benefPen->vlrdepensusp,
+                                                        true
+                                                    );
+                                                    $infoDedSusp->appendChild($infoBenefPen);
+                                                    $infoBenefPen = null;
+
+                                                }
+                                            }
+                                            $infoValores->appendChild($infoDedSusp);
+                                            $infoDedSusp = null;
+                                        }
+
+                                    }
+                                    $infoProcRet->appendChild($infoValores);
+                                    $infoValores = null;
+                                }
+                            }
+
+
+                            $infoIrcr->appendChild($infoProcRet);
+                            $infoProcRet = null;
+                        }
+                    }
+                    $infoIrComplem->appendChild($infoIrcr);
+                    $infoIrcr = null;
+                }
+            }
+            if (isset($this->std->idebenef->infoircomplem->plansaude) &&
+            !empty($this->std->idebenef->infoircomplem->plansaude)) {
+                foreach ($this->std->idebenef->infoircomplem->plansaude as $planos) {
+                    $infoPlanSaude = $this->dom->createElement("planSaude");
+
+                    $this->dom->addChild(
+                        $infoPlanSaude,
+                        'cnpjOper',
+                        $planos->cnpjoper,
+                        true
+                    );
+
+                    $this->dom->addChild(
+                        $infoPlanSaude,
+                        'regANS',
+                        !empty($planos->regans) ? $planos->regans : null,
+                        false
+                    );
+
+                    $this->dom->addChild(
+                        $infoPlanSaude,
+                        'vlrSaudeTit',
+                        $planos->vlrsaudetit,
+                        true
+                    );
+
+                    if (isset($planos->infodepsau) && !empty($planos->infodepsau)) {
+                        foreach ($planos->infodepsau as $depPlanos) {
+                            $infoDepSau = $this->dom->createElement("infoDepSau");
+                            $this->dom->addChild(
+                                $infoDepSau,
+                                'cpfDep',
+                                $depPlanos->cpfdep,
+                                true
+                            );
+
+                            $this->dom->addChild(
+                                $infoDepSau,
+                                'vlrSaudeDep',
+                                $depPlanos->vlrsaudedep,
+                                true
+                            );
+
+                            $infoPlanSaude->appendChild($infoDepSau);
+                            $infoDepSau = null;
+                        }
+                    }
+                    $infoIrComplem->appendChild($infoPlanSaude);
+                    $infoPlanSaude = null;
+                }
+
+            }
+            if (isset($this->std->idebenef->infoircomplem->inforeembmed) &&
+                !empty($this->std->idebenef->infoircomplem->inforeembmed)) {
+                foreach($this->std->idebenef->infoircomplem->inforeembmed  as $reemb) {
+                    $infoReembMed = $this->dom->createElement("infoReembMed");
+                    $this->dom->addChild(
+                        $infoReembMed,
+                        'indOrgReemb',
+                        $reemb->indorgreemb,
+                        true
+                    );
+                    $this->dom->addChild(
+                        $infoReembMed,
+                        'cnpjOper',
+                        !empty($reemb->cnpjoper) ? $reemb->cnpjoper : null,
+                        false
+                    );
+
+                    $this->dom->addChild(
+                        $infoReembMed,
+                        'regANS',
+                        !empty($reemb->regans) ? $reemb->regans : null,
+                        false
+                    );
+                    if (isset($reemb->detreembtit) && !empty($reemb->detreembtit)) {
+
+                        foreach ($reemb->detreembtit as $reembtit) {
+                            $infoReembTit = $this->dom->createElement("detReembTit");
+                            $this->dom->addChild(
+                                $infoReembTit,
+                                'tpInsc',
+                                $reembtit->tpinsc,
+                                true
+                            );
+
+                            $this->dom->addChild(
+                                $infoReembTit,
+                                'nrInsc',
+                                $reembtit->nrinsc,
+                                true
+                            );
+
+                            $this->dom->addChild(
+                                $infoReembTit,
+                                'vlrReemb',
+                                !empty($reembtit->vlreemb) ? $reembtit->vlreemb : null,
+                                false
+                            );
+
+                            $this->dom->addChild(
+                                $infoReembTit,
+                                'vlrReembAnt',
+                                !empty($reembtit->vlreembant) ? $reembtit->vlreembant : null,
+                                false
+                            );
+
+                            $infoReembMed->appendChild($infoReembTit);
+                            $infoReembTit = null;
+                        }
+                    }
+                    if (isset($reemb->inforeembdep) && !empty($reemb->inforeembdep)) {
+                        foreach($reemb->inforeembdep as $reembdep) {
+                            $infoReembDep = $this->dom->createElement("infoReembDep");
+                            $this->dom->addChild(
+                                $infoReembDep,
+                                'cpfBenef',
+                                $reembdep->cpfbenef,
+                                true
+                            );
+                            if (isset($reembdep->detreembdep) && !empty($reembdep->detreembdep)) {
+                                foreach ($reembdep->detreembdep as $detReemb) {
+                                    $infoDetReembDep = $this->dom->createElement("detReembDep");
+                                    $this->dom->addChild(
+                                        $infoDetReembDep,
+                                        'tpInsc',
+                                        $detReemb->tpinsc,
+                                        true
+                                    );
+                                    $this->dom->addChild(
+                                        $infoDetReembDep,
+                                        'nrInsc',
+                                        $detReemb->nrinsc,
+                                        true
+                                    );
+
+                                    $this->dom->addChild(
+                                        $infoDetReembDep,
+                                        'vlrReemb',
+                                        !empty($detReemb->vlrreemb) ? $detReemb->vlrreemb : null ,
+                                        false
+                                    );
+
+                                    $this->dom->addChild(
+                                        $infoDetReembDep,
+                                        'vlrReembAnt',
+                                        !empty($detReemb->vlrreembant) ? $detReemb->vlrreembant : null ,
+                                        false
+                                    );
+
+                                    $infoReembDep->appendChild($infoDetReembDep);
+                                    $infoDetReembDep= null;
+                                }
+
+                            }
+                            $infoReembMed->appendChild($infoReembDep);
+                            $infoReembDep = null;
+                        }
+                    }
+                    $infoIrComplem->appendChild($infoReembMed);
+                    $infoReembMed = null;
+                }
+            }
+            $ideBenef->appendChild($infoIrComplem);
+        }
+        $this->node->appendChild($ideBenef);
+
+        //finalizaÃ§Ã£o do xml
+        $this->eSocial->appendChild($this->node);
+        //$this->xml = $this->dom->saveXML($this->eSocial);
+        $this->sign();
+                // var_dump($this->xml);
+        // die();
+
+
+    }
+
 }

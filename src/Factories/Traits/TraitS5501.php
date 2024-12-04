@@ -136,4 +136,13 @@ trait TraitS2500
         $this->sign();
         
     }
+
+    /**
+     * builder for version S.1.3.0
+     */
+    protected function toNodeS130()
+    {
+        throw new \Exception("TODO .");
+        
+    }
 }

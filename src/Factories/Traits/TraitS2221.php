@@ -140,6 +140,9 @@ trait TraitS2221
         throw new \Exception("NÃO EXISTE EVENTO {$this->evtAlias} na versão S_1.1 !!");
     }
 
+    /**
+     * builder for version S.1.3.0
+     */
     protected function toNodeS130()
     {
         $ideEmpregador = $this->node->getElementsByTagName('ideEmpregador')->item(0);

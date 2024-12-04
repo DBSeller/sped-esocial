@@ -171,4 +171,12 @@ trait TraitS1270
     {
         throw new \Exception("TODO !!");
     }
+
+    /**
+     * builder for version S.1.3.0
+     */
+    protected function toNodeS130()
+    {
+        throw new \Exception("TODO !!");
+    }
 }

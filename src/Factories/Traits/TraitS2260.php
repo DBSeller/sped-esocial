@@ -191,4 +191,12 @@ trait TraitS2260
     {
         throw new \Exception("NÃO EXISTE EVENTO {$this->evtAlias} na versão S_1.0 !!");
     }
+
+    /**
+     * builder for version S.1.3.0
+     */
+    protected function toNodeS130()
+    {
+        throw new \Exception("NÃO EXISTE EVENTO {$this->evtAlias} na versão S_1.3.");
+    }
 }
