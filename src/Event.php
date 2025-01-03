@@ -84,6 +84,7 @@ class Event
         'evtproctrab' => Factories\EvtProcTrab::class,
         'evtcontproc' => Factories\EvtContProc::class,
         'evtexcproctrab' => Factories\EvtExcProcTrab::class,
+        'evtconsolidcontproc' => Factories\EvtConsolidContProc::class,
     ];
 
     /**
@@ -151,6 +152,7 @@ class Event
         's2420' => 'evtcdbenterm',
         's2500' => 'evtproctrab',
         's2501' => 'evtcontproc',
+        's2555' => 'evtconsolidcontproc',
         's3500' => 'evtexcproctrab',
     ];
 
