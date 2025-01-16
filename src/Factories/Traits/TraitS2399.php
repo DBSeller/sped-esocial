@@ -1340,6 +1340,38 @@ trait TraitS2399
                             false
                         );
                         $ideEstabLot->appendChild($detVerbas);
+
+                        if (isset($dever->descfolha)) {
+                            $descfolha = $this->dom->createElement("descFolha");
+                            $this->dom->addChild(
+                                $descfolha,
+                                "tpDesc",
+                                $dever->descfolha->tpdesc,
+                                true
+                            );
+
+                            $this->dom->addChild(
+                                $descfolha,
+                                "instFinanc",
+                                $dever->descfolha->instfinanc,
+                                true
+                            );
+                            $this->dom->addChild(
+                                $descfolha,
+                                "nrDoc",
+                                $dever->descfolha->nrdoc,
+                                true
+                            );
+                            if(isset($dever->descfolha->observacao) && !empty($dever->descfolha->observacao)){
+                                $this->dom->addChild(
+                                    $descfolha,
+                                    "observacao",
+                                    $dever->descfolha->observacao,
+                                    true
+                                );
+                            };
+                            $detVerbas->appendChild($descfolha);
+                        };
                     }
                     
                     if (!empty($el->infosimples)) {

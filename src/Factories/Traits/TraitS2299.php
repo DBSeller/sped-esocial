@@ -2519,9 +2519,41 @@ trait TraitS2299
                                     $dv->indapurir,
                                     true
                                 );
-                            }
+                            };
 
                             $ideEstabLot->appendChild($detVerbas);
+
+                            if (isset($dv->descfolha)) {
+                                $descfolha = $this->dom->createElement("descFolha");
+                                $this->dom->addChild(
+                                    $descfolha,
+                                    "tpDesc",
+                                    $dv->descfolha->tpdesc,
+                                    true
+                                );
+
+                                $this->dom->addChild(
+                                    $descfolha,
+                                    "instFinanc",
+                                    $dv->descfolha->instfinanc,
+                                    true
+                                );
+                                $this->dom->addChild(
+                                    $descfolha,
+                                    "nrDoc",
+                                    $dv->descfolha->nrdoc,
+                                    true
+                                );
+                                if(isset($dv->descfolha->observacao) && !empty($dv->descfolha->observacao)){
+                                    $this->dom->addChild(
+                                        $descfolha,
+                                        "observacao",
+                                        $dv->descfolha->observacao,
+                                        true
+                                    );
+                                };
+                                $detVerbas->appendChild($descfolha);
+                            };
                         }
 
                         if (!empty($isl->infoagnocivo)) {

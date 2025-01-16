@@ -2396,6 +2396,38 @@ trait TraitS1200
                                 );
                             }
                             $remunPerApur->appendChild($itensRemun);
+
+                            if (isset($itemr->descfolha)) {
+                                $descfolha = $this->dom->createElement("descFolha");
+                                $this->dom->addChild(
+                                    $descfolha,
+                                    "tpDesc",
+                                    $itemr->descfolha->tpdesc,
+                                    true
+                                );
+
+                                $this->dom->addChild(
+                                    $descfolha,
+                                    "instFinanc",
+                                    $itemr->descfolha->instfinanc,
+                                    true
+                                );
+                                $this->dom->addChild(
+                                    $descfolha,
+                                    "nrDoc",
+                                    $itemr->descfolha->nrdoc,
+                                    true
+                                );
+                                if(isset($itemr->descfolha->observacao) && !empty($itemr->descfolha->observacao)){
+                                    $this->dom->addChild(
+                                        $descfolha,
+                                        "observacao",
+                                        $itemr->descfolha->observacao,
+                                        true
+                                    );
+                                };
+                                $itensRemun->appendChild($descfolha);
+                            };
                         }
                         
                         if (!empty($rpa->infoagnocivo)) {
