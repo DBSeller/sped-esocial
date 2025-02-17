@@ -528,7 +528,7 @@ trait TraitS2230
         $this->eSocial->appendChild($this->node);
         $this->sign();
     }
-    
+
     /**
      * builder for version S.1.1.0
      */
@@ -1177,6 +1177,27 @@ trait TraitS2230
                 );
 
                 $iniAfastamento->appendChild($infoMandSind);
+            }
+                if (!empty($this->std->infoafastamento->iniafastamento->infomandelet)) {
+                $infoMandElet = $this->dom->createElement("infoMandElet");
+
+                $this->dom->addChild(
+                    $infoMandElet,
+                    "cnpjMandElet",
+                    $this->std->infoafastamento->iniafastamento->infomandelet->cnpjmandelet,
+                    true
+                );
+
+                if (!empty($this->std->infoafastamento->iniafastamento->infomandelet->indremuncargo)) {
+                    $this->dom->addChild(
+                        $infoMandElet,
+                        "indRemunCargo",
+                        $this->std->infoafastamento->iniafastamento->infomandelet->indremuncargo,
+                        true
+                    );
+                }
+
+                $iniAfastamento->appendChild($infoMandElet);
             }
 
             $infoAfastamento->appendChild($iniAfastamento);
