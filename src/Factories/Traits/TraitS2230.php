@@ -1178,9 +1178,8 @@ trait TraitS2230
 
                 $iniAfastamento->appendChild($infoMandSind);
             }
-                if (!empty($this->std->infoafastamento->iniafastamento->infomandelet)) {
+            if (!empty($this->std->infoafastamento->iniafastamento->infomandelet)) {
                 $infoMandElet = $this->dom->createElement("infoMandElet");
-
                 $this->dom->addChild(
                     $infoMandElet,
                     "cnpjMandElet",
@@ -1199,10 +1198,8 @@ trait TraitS2230
 
                 $iniAfastamento->appendChild($infoMandElet);
             }
-
             $infoAfastamento->appendChild($iniAfastamento);
         }
-
         if (!empty($this->std->inforetif)) {
             $infoRetif = $this->dom->createElement("infoRetif");
 
