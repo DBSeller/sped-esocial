@@ -449,8 +449,7 @@
                                                                                             "instFinanc": {
                                                                                                 "required": true,
                                                                                                 "type": "string",
-                                                                                                "minimum": 1,
-                                                                                                "maximum": 3
+                                                                                                "pattern": "^[0-9]{1,3}$"
                                                                                             },
                                                                                             "nrDoc": {
                                                                                                 "required": true,
