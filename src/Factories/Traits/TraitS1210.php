@@ -1862,14 +1862,14 @@ trait TraitS1210
                             $this->dom->addChild(
                                 $infoReembTit,
                                 'vlrReemb',
-                                !empty($reembtit->vlreemb) ? $reembtit->vlreemb : null,
+                                !empty($reembtit->vlrreemb) ? $reembtit->vlrreemb : null,
                                 false
                             );
 
                             $this->dom->addChild(
                                 $infoReembTit,
                                 'vlrReembAnt',
-                                !empty($reembtit->vlreembant) ? $reembtit->vlreembant : null,
+                                !empty($reembtit->vlrreembant) ? $reembtit->vlrreembant : null,
                                 false
                             );
 
