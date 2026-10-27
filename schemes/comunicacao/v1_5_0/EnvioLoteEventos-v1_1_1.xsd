@@ -73,7 +73,7 @@
             <xs:documentation>Número de Inscrição</xs:documentation>
           </xs:annotation>
           <xs:restriction base="xs:string">
-            <xs:pattern value="\d{8,15}" />
+              <xs:pattern value="[A-Za-z0-9]{8,15}" />
           </xs:restriction>
         </xs:simpleType>
       </xs:element>
@@ -100,7 +100,7 @@
             <xs:documentation>Número de Inscrição</xs:documentation>
           </xs:annotation>
           <xs:restriction base="xs:string">
-            <xs:pattern value="\d{8,15}" />
+              <xs:pattern value="[A-Za-z0-9]{8,15}" />
           </xs:restriction>
         </xs:simpleType>
       </xs:element>
